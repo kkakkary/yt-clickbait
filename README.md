@@ -27,7 +27,17 @@ analysts studying engagement.
 by rsrishav, collected with the YouTube Data API. About 200 trending videos per day per
 country since August 2020. CC0 license; public metadata only.
 
-Copy these six files into `data/raw/`:
+The data covers 2020-08-12 to 2024-04-15 (the Kaggle dataset stopped updating then).
+Download with a Kaggle API token in `~/.kaggle/kaggle.json`:
+
+```bash
+for f in {US,GB,CA}_youtube_trending_data.csv {US,GB,CA}_category_id.json; do
+  uvx --with six kaggle datasets download rsrishav/youtube-trending-video-dataset -f $f -p data/raw
+done
+cd data/raw && for z in *.zip; do unzip -o "$z" && rm "$z"; done
+```
+
+This gives these six files in `data/raw/`:
 
 ```
 US_youtube_trending_data.csv   US_category_id.json
@@ -108,11 +118,21 @@ Engagement is left empty, not zero, when the creator turned likes or comments of
 
 **Video age.** Days from publish to the snapshot, at least 1. Models use `log_age_days`.
 
-**English only.** The clickbait word list, VADER, and TF-IDF assume English. A title is kept
-when English is the most likely language among 20 languages common on these charts. Very
-short titles (emoji only, for example) are kept. A fixed confidence cutoff was tried and
-rejected: short, name-heavy English titles like "MrBeast | $1 vs $1,000,000 Hotel" score low
-English confidence and were wrongly dropped.
+**English only.** The clickbait word list, VADER, and TF-IDF assume English. A title is
+dropped only with real evidence it isn't English: it's mostly in a non-Latin script, or the
+language detector (lingua) says non-English *and* the title contains common French/Spanish
+words ("le", "de", "j'ai", "oficial") or at least 20% of its words carry accents.
+
+This took three tries, each checked by reading random samples of dropped titles:
+
+1. *English confidence ≥ 0.5* dropped most name-heavy English titles
+   ("MrBeast | $1 vs $1,000,000 Hotel").
+2. *Detector's top guess is English* still dropped about a third of English titles on real
+   data, because short titles in caps confuse it: "KSI TALENT SHOW" came out as Tagalog,
+   "SIDEMEN RAGE AT IMPOSSIBLE FALL GUYS MAP" as French.
+3. *Current rule:* drops 4,050 of 82,230 videos (3,111 trended in CA, mostly Québec
+   French). About 29 of 30 sampled drops are truly non-English, and under 1% of kept
+   titles are not English (mostly K-pop titles mixing English and Korean).
 
 **Clickbait features.** Length, caps ratio, all-caps words, `!` and `?` counts, numbers,
 starting with a number, emojis, brackets, `|` or `:`, hashtags, "you/your", and clickbait
@@ -155,8 +175,9 @@ pipeline sets up these controls:
 The clean step records `n_distinct_titles`, `title_changed`, `first_title`, and `last_title`
 for each video, using the daily snapshots across countries. This catches manual title edits
 during trending and translated per-country titles. YouTube's title A/B testing ("Test &
-Compare") only began rolling out in July 2025, and the API returns only the main title, so
-A/B variants don't appear in this data.
+Compare") only began rolling out in July 2025, after this dataset ends (April 2024), so
+A/B variants can't appear. Result: 2.9% of videos (about 2,300) trended under more than one
+title.
 
 ## Limitations
 

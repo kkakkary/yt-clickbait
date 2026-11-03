@@ -21,8 +21,12 @@ uv run python scripts/build_features.py [--skip-roberta] [--skip-embeddings]
   `.venv.nosync/` (iCloud skips `*.nosync`) with `.venv` as a symlink to it. Don't recreate
   `.venv` as a real folder. Large files in `data/` can be evicted too.
 - Python pinned to 3.12; torch / sentence-transformers lag behind 3.14.
-- Language filter: a fixed English-confidence cutoff wrongly drops name-heavy English titles.
-  Use top-language-among-candidates (`data/language.py`).
+- Language filter: lingua alone misreads short caps/name-heavy English titles. Drop only on
+  evidence (non-Latin script, or lingua non-English plus foreign words/accents). Check any
+  change by sampling dropped titles from real data (`data/language.py`).
+- Dataset ends 2024-04-15 (Kaggle stopped updating), before YouTube title A/B testing.
+- Kaggle download: `uvx --with six kaggle datasets download rsrishav/youtube-trending-video-dataset -f <file> -p data/raw`
+  (token in ~/.kaggle/kaggle.json).
 - Clean step uses `drop_duplicates(keep="last")`, not `groupby().last()`, which mixes
   non-null values from different snapshots.
 - TF-IDF vocabulary and channel baselines must be fit on train rows only.
