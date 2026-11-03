@@ -1,0 +1,66 @@
+# Clickbait phrases, one per line, matched case-insensitively on word boundaries.
+# Sources: common phrases from Chakraborty et al. (2016) "Stop Clickbait" headline study
+# and YouTube-specific terms seen in creator titles. Edit freely; lines starting with # are ignored.
+# Left out on purpose: generic words like "official", "vs", "last", "breaking" that mostly
+# mark music videos, sports highlights, and news, not clickbait. TF-IDF still sees them.
+you won't believe
+you wont believe
+won't believe
+can't believe
+will blow your mind
+mind blowing
+what happens next
+you need to know
+you need to see
+must see
+must watch
+watch till the end
+wait for it
+gone wrong
+gone sexual
+not clickbait
+no clickbait
+shocking
+shocked
+insane
+crazy
+unbelievable
+incredible
+epic
+ultimate
+best
+worst
+biggest
+never
+finally
+secret
+secrets
+revealed
+exposed
+truth
+the truth about
+reacts
+reaction
+reacting
+challenge
+prank
+pranked
+fail
+fails
+emotional
+cried
+crying
+omg
+wtf
+hack
+hacks
+trick
+tricks
+surprising
+surprise
+amazing
+destroyed
+first time
+almost died
+i quit
+leaked
