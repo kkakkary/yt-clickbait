@@ -1,0 +1,45 @@
+seed: 42
+countries: [US, GB, CA]
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  models: models
+  figures: reports/figures
+
+files:
+  videos: videos.parquet
+  split: split.parquet
+  rule_features: rule_features.parquet
+  sentiment: sentiment.parquet
+  tfidf_matrix: tfidf.npz
+  tfidf_vectorizer: tfidf_vectorizer.pkl
+  embeddings: embeddings.npy
+
+language:
+  # Titles with fewer letters than this are too short to classify; kept as English.
+  min_letters: 10
+  # A title is English when English is the top guess among these languages.
+  candidates: [ENGLISH, FRENCH, SPANISH, PORTUGUESE, GERMAN, ITALIAN, DUTCH, POLISH, TURKISH,
+    RUSSIAN, ARABIC, HINDI, PUNJABI, URDU, TAGALOG, INDONESIAN, VIETNAMESE, KOREAN,
+    JAPANESE, CHINESE]
+
+split:
+  test_size: 0.2
+  # Within-channel split: only channels with at least this many videos.
+  min_channel_videos: 10
+
+sentiment:
+  roberta_model: cardiffnlp/twitter-roberta-base-sentiment-latest
+  batch_size: 64
+
+embeddings:
+  model: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 256
+
+tfidf:
+  ngram_range: [1, 2]
+  min_df: 5
+  max_df: 0.9
+  sublinear_tf: true

@@ -1,0 +1,51 @@
+[project]
+name = "ytclickbait"
+version = "0.1.0"
+description = "Which clickbait title tactics go with views and engagement on trending YouTube videos"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=16",
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "scikit-learn>=1.5",
+    "statsmodels>=0.14",
+    "pyyaml>=6.0",
+    "emoji>=2.12",
+    "vaderSentiment>=3.3.2",
+    "lingua-language-detector>=2.0",
+    "torch>=2.3",
+    "transformers>=4.44",
+    "sentence-transformers>=3.0",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+    "tqdm>=4.66",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.5",
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ytclickbait"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: downloads or runs transformer models (deselect with -m 'not slow')"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

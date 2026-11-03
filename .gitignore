@@ -1,0 +1,45 @@
+# Data and generated artifacts (never commit raw or processed data)
+data/raw/*
+data/interim/*
+data/processed/*
+!data/**/.gitkeep
+models/*
+!models/.gitkeep
+reports/figures/*
+!reports/figures/.gitkeep
+*.npy
+*.npz
+*.parquet
+*.pkl
+*.csv
+
+# Secrets
+.env
+.env.*
+!.env.example
+kaggle.json
+*.pem
+*.key
+*.p12
+.netrc
+credentials*.json
+
+# Python
+.venv
+.venv.nosync/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
