@@ -18,8 +18,9 @@ analysts studying engagement.
 | Repo structure, environment, tests | Done |
 | Load, clean, deduplicate, language filter, train/test splits | Done |
 | Rule-based features, VADER + RoBERTa sentiment, TF-IDF, embeddings | Done |
-| EDA and feature notebooks | Scaffolded |
-| Models for log(views) and engagement, interpretation by category | Next phase |
+| Real data downloaded and processed (78,180 videos) | Done |
+| EDA and feature notebooks | Done (run on real data) |
+| Models for log(views) and engagement, interpretation by category | Next, see [Next steps](#next-steps) |
 
 ## Data
 
@@ -178,6 +179,67 @@ during trending and translated per-country titles. YouTube's title A/B testing (
 Compare") only began rolling out in July 2025, after this dataset ends (April 2024), so
 A/B variants can't appear. Result: 2.9% of videos (about 2,300) trended under more than one
 title.
+
+## Next steps
+
+### 1. Baseline models for log(views)
+
+Each model gets the same controls: `log_age_days`, category, `publish_week`,
+`publish_hour_utc`, `publish_dow_utc`, `n_tags`, `desc_len`, `n_countries`.
+
+| Model | Title features | Algorithm |
+|-------|----------------|-----------|
+| Controls only | none | Ridge (floor every title model must beat) |
+| (a) Rules | 14 clickbait features + VADER + RoBERTa | OLS (readable coefficients) and Ridge |
+| (b) TF-IDF | 21k word and phrase weights | Ridge, alpha by cross-validation |
+| (c) Embeddings | 384-dim MiniLM vectors | Ridge, then LightGBM if Ridge is weak |
+
+Report RMSE and R² on held-out data for **both** splits:
+
+- `split_group` (creators never seen in training): does the title help predict views for a
+  new creator?
+- `split_time` (same creators, later videos), with the channel baseline added: does the
+  title help beyond what that creator usually gets?
+
+The gain over "controls only" is the title's contribution. Expect it to be small;
+how small is a result in itself.
+
+### 2. Which tactics go with views, and which are overused
+
+- OLS on rule features with channel-clustered standard errors. Report effect sizes
+  ("one extra `!` goes with X% more or fewer views") and confidence intervals.
+- Same model with **channel fixed effects** (within-creator). Compare coefficients with the
+  pooled model: an effect that shrinks or flips sign was about which channels use the tactic,
+  not the tactic itself. This answers the instructor's pooled vs. single-creator question.
+- Top positive and negative TF-IDF terms from the Ridge model, controls included.
+- "Overused" = common tactics (high usage rate) whose effect is near zero or negative.
+
+### 3. Engagement
+
+Repeat step 2 with `log_likes_per_view` and `log_comments_per_view` as targets. Rows where
+the creator disabled likes or comments are excluded, not treated as zero. Key question: do
+tactics that raise views also lower likes or comments per view (the clickbait "backlash")?
+
+### 4. By category
+
+Fit the rule-feature models per category (top ~10 categories by count; small ones pooled
+into "Other"), or add feature × category interactions. Report where tactics work and where
+they backfire, e.g. caps in Gaming vs. News & Politics.
+
+### 5. Robustness checks
+
+- Title changes: rerun on videos with one title only (drops 2.9%) and compare.
+- Country: fit US-only, GB-only, CA-only.
+- Language filter: rerun with every title kept and confirm conclusions hold.
+- Sentiment: VADER vs. RoBERTa (correlation is only 0.48, so they measure different things).
+
+### 6. Stretch goals
+
+- Fine-tune a small transformer (e.g. DistilBERT) to predict `log_views` from the title and
+  compare it with the embedding + Ridge model.
+- Use the YouTube Data API to fetch subscriber counts and video length, two confounders
+  this dataset doesn't have.
+- Interactive tool: paste a title, see its clickbait features and how similar titles did.
 
 ## Limitations
 
