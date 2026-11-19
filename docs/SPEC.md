@@ -358,11 +358,21 @@ All unit tests run on small synthetic data in `tests/` (no real data needed). �
 
 ## 6. Code Check-in
 
-**Code:** GitHub repo (shared with `gshippee`) — _[insert link]_.
+**Code:** GitHub repo (shared with `gshippee`) — https://github.com/kkakkary/yt-clickbait.
 
 ### 6.1 Reflection
 
-> _TO DO_
+The biggest thing I learned is that the data needed more thought than I expected. Each video
+appeared many times, once for every day it was trending, so I had to boil it down to one
+record per video first. I also realized that a video's views depend far more on who made it
+than on its title. Big channels get big views no matter what, so I had to compare each video
+against that creator's usual performance. Without that, the title would get credit that
+really belongs to the creator.
+
+I also learned not to trust automatic tools without checking their work. My tool for
+removing non-English titles was throwing out many English ones, and I only noticed by reading
+through what it removed. Finally, every video in my data was already trending. That means my
+results describe what works for successful videos, not for YouTube as a whole.
 
 ### 6.2 Progress Check against Spec
 
