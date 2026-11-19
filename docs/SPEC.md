@@ -362,6 +362,8 @@ All unit tests run on small synthetic data in `tests/` (no real data needed). â˜
 
 ### 6.1 Reflection
 
+#### Kevin Kakkary
+
 The biggest thing I learned is that the data needed more thought than I expected. Each video
 appeared many times, once for every day it was trending, so I had to boil it down to one
 record per video first. I also realized that a video's views depend far more on who made it
