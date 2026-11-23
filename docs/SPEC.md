@@ -107,15 +107,15 @@ because the word list, VADER and TF-IDF assume English (FR-4).
 
 ### 1.5 Work Distribution
 
-| Member | Responsibility |
-|--------|----------------|
-| Kevin Kakkary (contact) | Coordination and submissions; final report and visualizations (FR-9) |
-| Rudy Ramachandran | Data pipeline: loading, cleaning, language filter, splits, channel baselines (`src/ytclickbait/data/`) |
-| In A Park | Feature engineering: rule features, sentiment, TF-IDF, embeddings (`features/`) |
-| Guillermo Tostado | Modeling: baselines, OLS / fixed effects, engagement and category analysis, robustness checks (`models/`, notebook 03) |
-| All | Tests for own modules, EDA review, spec |
-
-> _Placeholder assignment — confirm/adjust to who actually owns what before submitting._
+| Responsibility | Assigned to |
+|----------------|-------------|
+| Data pipeline | All members |
+| Rule-based features | In A Park |
+| Sentiment features | Guillermo Tostado |
+| TF-IDF features | Kevin Kakkary |
+| Embeddings | Rudy Ramachandran |
+| Modeling | All members |
+| Testing | All members |
 
 ---
 
