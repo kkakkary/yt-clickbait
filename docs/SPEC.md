@@ -378,9 +378,7 @@ results describe what works for successful videos, not for YouTube as a whole.
 
 #### In A Park
 
-Reviewing our feature engineering approach helped me understand that the same YouTube title can be represented in different ways. Rule-based features, such as the number of exclamation marks and the proportion of capital letters, are easy to understand, but they may not capture the overall meaning of a title. TF-IDF and sentence embeddings can represent the words and meaning of a title in different ways. This made me realize that the features we choose affect what the model can learn and how easily we can interpret the results.
-
-I also learned that feature engineering requires careful testing, even for features that seem simple. For example, when identifying clickbait phrases, we need to make sure the rules do not accidentally count parts of unrelated words. Another important consideration is data leakage. The TF-IDF vocabulary and weights should be learned only from the training data so that the test set can provide a more reliable evaluation. Through this project, I am learning to think not only about which features to use, but also about how to make them reliable.
+One of the most valuable parts of this project was getting to help design a data science project from start to finish. I usually focus on analyzing the data and interpreting the results. This time, I also had to think about what each part of the project should do and how we would know it worked. For the rule-based title features, I chose a sample YouTube title and wrote down exactly what the code should detect, including three exclamation marks, one question mark, and one emoji. Having those expected values gave us clear criteria for deciding whether the test passed. That experience helped me see how decisions made during project design shape the quality of the data we eventually analyze.
 
 ### 6.2 Progress Check against Spec
 
