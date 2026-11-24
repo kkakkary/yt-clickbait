@@ -462,14 +462,14 @@ While embedding implementation is still pending, the acceptance tests have surpr
 | FR-7 coefficients, fixed effects, by category | **Not started** |
 | FR-8 title / trending history, categories | **Met** (2.9 % of videos changed title) |
 | FR-9 final report and figures | **Not started** (EDA figures exist in notebook 01) |
-| FR-10 embedding generation | **Met** (code exists; real-data run done earlier) |
+| FR-10 embedding generation | **In progress** (code exists, real-data run pending) |
 | FR-11 embedding models, FR-12 embedding clusters | **Not started**; acceptance tests UT-15 – UT-18 written first and expected to fail |
 | NFR-1 leakage, NFR-2 reproducibility, NFR-4 alignment, NFR-5, NFR-6 | **Met** |
 | NFR-3 performance | **Met** for tests (~2 s); feature-build timing to be recorded |
 | UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 27 tests across 6 files) |
 | FT-1, FT-2 | **Passing** on the real data (78,180 videos built); FT-2 shuffle-guard step to be run manually |
 | FT-3 | **Not yet runnable** (models pending) |
-| UT-8 – UT-14 | **Written, not yet run** ; expected to pass. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
+| UT-8 – UT-14 | **Failing by design**. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
 | UT-15 – UT-18, FT-6, FT-7 | **Failing by design** until `embedding_model.py` exists |
 
 **What we'd change in the spec:** the proposal only controlled for video age; we'd have written
