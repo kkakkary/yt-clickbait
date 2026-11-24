@@ -2,7 +2,7 @@
 
 **Project Specification** · DSC 200, Fall 2026 · Project Update (due Mon 11/23) · Repo: `yt-clickbait`
 
-**Team:** In A Park, Rudy Ramachandran, Guillermo Tostado, Kevin Kakkary (contact)
+**Team:** In A Park, Rudy Ramachandran, Guillermo Montoya, Kevin Kakkary (contact)
 
 ---
 
@@ -111,7 +111,7 @@ because the word list, VADER and TF-IDF assume English (FR-4).
 |----------------|-------------|
 | Data pipeline | All members |
 | Rule-based features | In A Park |
-| Sentiment features | Guillermo Tostado |
+| Sentiment features | Guillermo Montoya |
 | TF-IDF features | Kevin Kakkary |
 | Embeddings | Rudy Ramachandran |
 | Modeling | All members |
@@ -379,6 +379,12 @@ results describe what works for successful videos, not for YouTube as a whole.
 #### In A Park
 
 One of the most valuable parts of this project was getting to help design a data science project from start to finish. I usually focus on analyzing the data and interpreting the results. This time, I also had to think about what each part of the project should do and how we would know it worked. For the rule-based title features, I chose a sample YouTube title and wrote down exactly what the code should detect, including three exclamation marks, one question mark, and one emoji. Having those expected values gave us clear criteria for deciding whether the test passed. That experience helped me see how decisions made during project design shape the quality of the data we eventually analyze.
+
+#### Guillermo Montoya
+
+At work I wrote every line myself, and every project or pipeline started with understanding the data in a notebook, where it came from, what each column really meant and checking for quality, consistency, etc. A pipeline could take somewhere from days to weeks if the business problem was clear and stakeholder conversations went smooth. Now with agents, I'm impressed at how fast you could build a project and how much the responsibilities have shifted. Moving from writing to verifying code and making code decisions is harder than I expected, since I was used to knowing every single piece of logic that I wrote and why it was there.
+
+The data stage in this project showed me why that data source understanding still matters. For example, some creators disable likes or comments, and a quick analysis or pipeline without much context could easily take wrong assumptions like recording them as 0, which would falsely state that nobody engaged with the video. And that's just one single column, in big projects there could be tens or hundredths of columns from very different sources of data, and so many wrong assumptions could be made. I feel like this is a great tool for building fast, but data quality and context still matter a lot.
 
 ### 6.2 Progress Check against Spec
 
