@@ -258,26 +258,37 @@ and branching (what gets dropped, where it can fail) more directly than structur
 
 ```mermaid
 flowchart LR
-    subgraph Config
-      CFG[configs/config.yaml] --> CP[config.py]
+    subgraph CONFIG["Config"]
+      CFG["configs/config.yaml"] --> CP["config.py"]
     end
-    subgraph "ytclickbait.data"
-      LD[load.py] --> CL[clean.py] --> LG[language.py] --> SP[split.py]
+    subgraph DATA["ytclickbait.data"]
+      LD["load.py"] --> CL["clean.py"] --> LG["language.py"] --> SP["split.py"]
     end
-    subgraph "ytclickbait.features"
-      RU[rules.py] ; SE[sentiment.py] ; TF[tfidf.py] ; EM[embeddings.py]
-      WL[(clickbait_words.txt)] --> RU
+    subgraph FEAT["ytclickbait.features"]
+      RU["rules.py"]
+      SE["sentiment.py"]
+      TF["tfidf.py"]
+      EM["embeddings.py"]
+      WL[("clickbait_words.txt")] --> RU
     end
-    subgraph "ytclickbait.models (in progress)"
-      MO[regression + reporting]
-      EMM[embedding_model.py]
+    subgraph MODELS["ytclickbait.models (in progress)"]
+      MO["regression + reporting"]
+      EMM["embedding_model.py"]
     end
-    EM -. embeddings.npy .-> EMM
-    S1[scripts/build_dataset.py] --> LD & SP
-    S2[scripts/build_features.py] --> RU & SE & TF & EM
-    CP --> S1 & S2
-    NB[notebooks 01–03] --> MO
-    T[tests/] -.verifies.-> CL & LG & SP & RU & SE & TF & EM
+    S1["scripts/build_dataset.py"] --> LD
+    S1 --> SP
+    S2["scripts/build_features.py"] --> RU
+    S2 --> SE
+    S2 --> TF
+    S2 --> EM
+    CP --> S1
+    CP --> S2
+    EM -.->|"embeddings.npy"| EMM
+    NB["notebooks 01-03"] --> MO
+    NB --> EMM
+    T["tests"] -.->|"verifies"| DATA
+    T -.->|"verifies"| FEAT
+    T -.->|"verifies"| EMM
 ```
 
 **Description:** the modules of the `src/ytclickbait` package, which thin scripts and
