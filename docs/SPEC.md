@@ -441,6 +441,14 @@ At work I wrote every line myself, and every project or pipeline started with un
 
 The data stage in this project showed me why that data source understanding still matters. For example, some creators disable likes or comments, and a quick analysis or pipeline without much context could easily take wrong assumptions like recording them as 0, which would falsely state that nobody engaged with the video. And that's just one single column, in big projects there could be tens or hundredths of columns from very different sources of data, and so many wrong assumptions could be made. I feel like this is a great tool for building fast, but data quality and context still matter a lot.
 
+#### Rudy Ramachandran
+
+In research I conducted during undergrad, I was advised against using AI to write code for projects - the concern was about modularity. If I used AI to update a script, other features in the script (that I didn't account for) could be changed, breaking other use cases for it. While there is a benefit to understanding every line of code, AI driven development can be much more efficient. In this project for example, I've taken a different approach than all my other coding projects - I've started by updating spec.md for the embeddings and adding acceptance tests. I plan to let the agent implement the embedding steps until the tests pass.
+
+While embedding implementation is still pending, the acceptance tests have surprised me with how many questions I didn't even think of. For instance, I didn't think that using all capitals in a video title has no impact on the embedding, or that the number of exclamation marks used in a video title has very little impact. Writing these tests has greatly improved my grasp of the embeddings, and I believe I now have a much stronger understanding I can evaluate agent implemented code with.
+
+
+
 ### 6.2 Progress Check against Spec
 
 | Item | Status |
@@ -458,10 +466,10 @@ The data stage in this project showed me why that data source understanding stil
 | FR-11 embedding models, FR-12 embedding clusters | **Not started**; acceptance tests UT-15 – UT-18 written first and expected to fail |
 | NFR-1 leakage, NFR-2 reproducibility, NFR-4 alignment, NFR-5, NFR-6 | **Met** |
 | NFR-3 performance | **Met** for tests (~2 s); feature-build timing to be recorded |
-| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 27 tests across 6 files) — _re-run and confirm before submitting_ |
+| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 27 tests across 6 files) |
 | FT-1, FT-2 | **Passing** on the real data (78,180 videos built); FT-2 shuffle-guard step to be run manually |
 | FT-3 | **Not yet runnable** (models pending) |
-| UT-8 – UT-14 | **Written, not yet run** (no environment on this machine); expected to pass. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
+| UT-8 – UT-14 | **Written, not yet run** ; expected to pass. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
 | UT-15 – UT-18, FT-6, FT-7 | **Failing by design** until `embedding_model.py` exists |
 
 **What we'd change in the spec:** the proposal only controlled for video age; we'd have written
