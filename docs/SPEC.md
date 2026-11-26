@@ -140,8 +140,8 @@ Each requirement traces to the code that implements it and the test(s) that veri
 | FR-8 | The system shall record per video `n_distinct_titles`, `title_changed`, `first_title`, `last_title`, `countries`, `n_countries`, `days_trending`, and map `category_id` to `category_name` from the country JSON files. | M / S | `data/clean.py` | `test_title_history`, `test_categories_mapped` |
 | FR-9 | The system shall produce a report with figures ranking tactics by effect size (most effective) and by high usage with near-zero or negative effect (most overused), for views and engagement. | H / V | notebook 03, `reports/` (not started) | Review of `reports/figures/` |
 | FR-10 | The system shall produce one embedding per video from its `title` (the latest-snapshot title) with `all-MiniLM-L6-v2`: 384 `float32` values, L2 norm 1 ± 1e-5, rows in `videos.parquet` order, saved to `embeddings.npy`. Saved vectors shall be reused only when the titles, their order and the model name all match the run that produced them; otherwise they are recomputed. | H / S | `features/embeddings.py` | UT-8, UT-12, UT-13, `test_embedding_cache_rejects_changed_titles` |
-| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (not started) | UT-15, UT-16, UT-17, FT-6 |
-| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `models/embedding_model.py` (not started) | UT-18, FT-7 |
+| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (`fit_ridge`, `score` built; FT-6 run pending) | UT-15, UT-16, UT-17, FT-6 |
+| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `models/embedding_model.py` (`fit_clusters` built; FT-7 report pending) | UT-18, FT-7 |
 
 ### 2.2 Non-Functional Requirements
 
@@ -217,7 +217,7 @@ versioned in Git.
 |----|------------------------|-------------|------------|
 | EA-1 | MiniLM lowercases text, so ALL CAPS is invisible to it. | Caps findings come from rule features only. | UT-9 |
 | EA-2 | Most emojis become an "unknown" token. | Emoji findings come from `n_emoji` only. | UT-10 |
-| EA-3 | `!` and `!!!` produce nearly the same vector. | Punctuation findings come from `n_exclaim` / `n_question` only. | UT-11 |
+| EA-3 | Repeating `!` changes the vector only a little: "great video!" vs "great video!!!" has cosine ≈ 0.89, against ≈ 0.15 for an unrelated title. Embeddings can't measure how much punctuation a title uses. | Punctuation findings come from `n_exclaim` / `n_question` only. | UT-11 |
 | EA-4 | Only the latest title is embedded (2.9 % of videos changed title). | Covered by the single-title robustness check. | — |
 | EA-5 | Titles often name the channel or series, and channels have a recognizable style, so embeddings can partly identify the creator (the confounder we are removing). Embeddings also encode topic, which overlaps with category. | Primary embedding result is `split_group` gain over a controls model that already includes category (FR-11). | FT-6 |
 | EA-6 | 384 dimensions are too many for readable OLS coefficients. | Ridge for prediction; clusters for interpretation (FR-12). | — |
@@ -366,8 +366,9 @@ All unit tests run on small synthetic data in `tests/` (no real data needed). �
 
 **Spec-driven workflow for embeddings.** UT-8 – UT-18 were written from FR-10 – FR-12 and
 EA-1 – EA-9 *before* the modeling code. UT-8 – UT-14 describe how the existing embedding code
-behaves and should pass now. UT-15 – UT-18 call `ytclickbait.models.embedding_model`, which
-does not exist yet, so they fail (red) until it is built. The loop is: make one test pass,
+behaves and should pass. UT-15 – UT-18 call `ytclickbait.models.embedding_model`, which did
+not exist yet, so they failed (red) until it was built one function at a time; all four now
+pass. The loop is: make one test pass,
 have a person review the result, then do the next. If a test shows an assumption is wrong
 (e.g. EA-2 emojis turn out to be read), we update the EA row and the test together rather than
 just editing the test.
@@ -399,7 +400,7 @@ just editing the test.
 | UT-8 | `test_embeddings.py::test_vectors_are_unit_length_float32` (slow) | MiniLM downloaded | Embed a batch of 10 titles | Shape (10, 384), `float32`, every row's L2 norm = 1 ± 1e-5 | — (FR-10, EA-7) |
 | UT-9 | `test_embeddings.py::test_caps_are_invisible` (slow) | Same | Embed "YOU WON'T BELIEVE THIS" and "you won't believe this" | Vectors equal within 1e-5 | — (EA-1) |
 | UT-10 | `test_embeddings.py::test_different_emojis_look_alike` (slow) | Same | Embed "pasta night 😱" and "pasta night 🔥" | Cosine similarity > 0.99 | — (EA-2) |
-| UT-11 | `test_embeddings.py::test_exclamation_count_barely_matters` (slow) | Same | Embed "great video!", "great video!!!", "car crash" | cos(! , !!!) > 0.9 and > cos(!, car crash) | — (EA-3) |
+| UT-11 | `test_embeddings.py::test_exclamation_count_barely_matters` (slow) | Same | Embed "great video!", "great video!!!", "car crash" | cos(! , !!!) > 0.85 and > cos(!, car crash) | — (EA-3) |
 | UT-12 | `test_embeddings.py::test_identical_titles_get_identical_vectors` (slow) | Same | Embed a batch containing "Official Trailer" twice | The two rows are equal within 1e-6 | — (FR-10, EA-7) |
 | UT-13 | `test_embeddings.py::test_cache_recomputes_when_model_changes` | Embedding call replaced by a fake that counts calls | `load_or_embed` with model A twice, then model B | Fake called once for A (second run reuses), once more for B | `.sha256` file holds B's fingerprint (FR-10, EA-8) |
 | UT-14 | `test_embeddings.py::test_cpu_and_accelerator_agree` (slow; skipped if no GPU) | MPS or CUDA available | Embed 5 titles on CPU and on the GPU | Values agree within 1e-4 | — (NFR-2) |
@@ -473,15 +474,16 @@ While embedding implementation is still pending, the acceptance tests have surpr
 | FR-7 coefficients, fixed effects, by category | **Not started** |
 | FR-8 title / trending history, categories | **Met** (2.9 % of videos changed title) |
 | FR-9 final report and figures | **Not started** (EDA figures exist in notebook 01) |
-| FR-10 embedding generation | **In progress** (code exists, real-data run pending) |
-| FR-11 embedding models, FR-12 embedding clusters | **Not started**; acceptance tests UT-15 – UT-18 written first and expected to fail |
+| FR-10 embedding generation | **Met** (`embeddings.npy`, 78,180 × 384, committed via LFS with its `.sha256`) |
+| FR-11 embedding models, FR-12 embedding clusters | **In progress**: `score()`, `fit_ridge()` and `fit_clusters()` built in `models/embedding_model.py` after the acceptance tests; real-data runs (FT-6, FT-7) next |
 | NFR-1 leakage, NFR-2 reproducibility, NFR-4 alignment, NFR-5, NFR-6 | **Met** |
-| NFR-3 performance | **Met** for tests (~2 s); feature-build timing to be recorded |
-| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 27 tests across 6 files) |
+| NFR-3 performance | **Met** for tests (fast suite 7.6 s on an M2 MacBook Air, budget 10 s); feature-build timing to be recorded |
+| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 47 tests across 9 files) |
 | FT-1, FT-2 | **Passing** on the real data (78,180 videos built); FT-2 shuffle-guard step to be run manually |
 | FT-3 | **Not yet runnable** (models pending) |
-| UT-8 – UT-14 | **Failing by design**. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
-| UT-15 – UT-18, FT-6, FT-7 | **Failing by design** until `embedding_model.py` exists |
+| UT-8 – UT-14 | **Passing** (UT-14 skipped without a GPU). UT-11's bar lowered from 0.9 to 0.85 after measuring 0.89; EA-3 updated |
+| UT-15 – UT-18 | **Passing** (UT-15 and UT-18 also checked to fail against a deliberately leaky version) |
+| FT-6, FT-7 | **Not yet run** (need the real-data notebooks) |
 
 **What we'd change in the spec:** the proposal only controlled for video age; we'd have written
 the "no leakage" and "creator vs. title" requirements up front. The within-channel time split,
