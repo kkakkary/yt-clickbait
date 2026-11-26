@@ -115,3 +115,19 @@ def test_top_terms_finds_planted_word():
     assert t.loc[t.direction == "positive", "term"].item() == "b"
     assert t.loc[t.direction == "positive", "coef"].item() == 2.0
     assert t.loc[t.direction == "negative", "coef"].item() == -3.0
+
+
+def test_baseline_fill_ignores_test_rows():
+    videos, split = _frames()
+    split["channel_baseline_split_time"] = [1.0] * 30 + [None] * 2 + [1.0] * 4 + [None] * 4
+    split.loc[split.index[-4:], "channel_baseline_split_time"] = None
+    a, _ = build_controls(videos, split, "split_time")
+    split2 = split.copy()
+    split2.loc[split2.index[-3:], "channel_baseline_split_time"] = 1e6
+    b, _ = build_controls(videos, split2, "split_time")
+    np.testing.assert_allclose(a[:-4].toarray(), b[:-4].toarray())
+
+
+def test_top_terms_rejects_vocab_mismatch():
+    with pytest.raises(ValueError, match="vocabulary"):
+        top_terms(np.zeros(5), np.array(["a", "b"]), n_controls=2)

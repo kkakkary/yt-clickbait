@@ -45,10 +45,13 @@ def build_controls(
         df[col] = videos[col].astype(str)
 
     numeric = list(NUMERIC_CONTROLS)
+    train, _ = split_masks(split, split_name)
     if split_name == "split_time":
         df["channel_baseline"] = split["channel_baseline_split_time"]
         # Channels outside the within-channel split have no baseline; they are never train/test.
-        df["channel_baseline"] = df["channel_baseline"].fillna(df["channel_baseline"].mean())
+        # Fill value comes from train rows only (NFR-1).
+        fill = df.loc[train.to_numpy(), "channel_baseline"].mean()
+        df["channel_baseline"] = df["channel_baseline"].fillna(fill)
         numeric.append("channel_baseline")
 
     encoder = ColumnTransformer(
@@ -58,7 +61,6 @@ def build_controls(
         ],
         sparse_threshold=1.0,
     )
-    train, _ = split_masks(split, split_name)
     encoder.fit(df[train.to_numpy()])
     return sparse.csr_matrix(encoder.transform(df)), encoder
 
@@ -110,6 +112,8 @@ def score(model, X, y: pd.Series, mask: pd.Series) -> dict:
 def top_terms(coef: np.ndarray, vocab: np.ndarray, n_controls: int, n: int = 30) -> pd.DataFrame:
     """Most positive and most negative TF-IDF coefficients (control columns excluded)."""
     term_coef = np.asarray(coef)[n_controls:]
+    if len(term_coef) != len(vocab):
+        raise ValueError("coefficient count does not match vocabulary size")
     order = term_coef.argsort()
     rows = [("positive", i) for i in order[::-1][:n]] + [("negative", i) for i in order[:n]]
     return pd.DataFrame(
@@ -131,6 +135,10 @@ def run(cfg: Config, targets=TARGETS, splits=SPLITS) -> tuple[pd.DataFrame, pd.D
     if tfidf.shape[0] != len(videos):
         raise ValueError("tfidf.npz is out of sync with videos.parquet; rerun build_features.py")
     vocab = vectorizer.get_feature_names_out()
+    if tfidf.shape[1] != len(vocab):
+        raise ValueError(
+            "tfidf.npz and tfidf_vectorizer.pkl are out of sync; rerun build_features.py"
+        )
     seed = cfg["seed"]
 
     metrics, terms = [], []
