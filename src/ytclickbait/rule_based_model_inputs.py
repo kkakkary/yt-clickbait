@@ -1,4 +1,3 @@
-import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from sklearn.metrics import mean_squared_error, r2_score
 
