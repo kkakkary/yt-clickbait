@@ -12,6 +12,7 @@ reports/figures/*
 *.parquet
 *.pkl
 *.csv
+!reports/*.csv
 
 # Secrets
 .env

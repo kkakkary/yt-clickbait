@@ -1,0 +1,361 @@
+target,split,direction,term,coef
+log_views,split_group,positive,mv,2.6486686131866803
+log_views,split_group,positive,sidemen,2.596940046293945
+log_views,split_group,positive,shorts,2.4325527445796253
+log_views,split_group,positive,league highlights,1.8034292266923555
+log_views,split_group,positive,m v,1.7946864703253809
+log_views,split_group,positive,babymonster,1.5881705264424217
+log_views,split_group,positive,bts,1.5652695831955061
+log_views,split_group,positive,skibidi,1.5443064398674062
+log_views,split_group,positive,skibidi toilet,1.4952068000422645
+log_views,split_group,positive,official trailer,1.4377915429660013
+log_views,split_group,positive,epl,1.436114305731592
+log_views,split_group,positive,blackpink,1.432544170031684
+log_views,split_group,positive,epl highlights,1.422051366182443
+log_views,split_group,positive,highlights nfl,1.3854451472672065
+log_views,split_group,positive,highlights,1.3157587138301072
+log_views,split_group,positive,india,1.2296060155305255
+log_views,split_group,positive,vijay,1.2028666044795335
+log_views,split_group,positive,kumar,1.186278425971809
+log_views,split_group,positive,2022 fifa,1.1620988727756894
+log_views,split_group,positive,smackdown,1.1584272966817872
+log_views,split_group,positive,fifa world,1.1158058232663004
+log_views,split_group,positive,2022 week,1.113061072363029
+log_views,split_group,positive,game highlights,1.1093112387513957
+log_views,split_group,positive,toilet,1.0797599842819097
+log_views,split_group,positive,khan,1.03924130642324
+log_views,split_group,positive,among,0.9987308225703404
+log_views,split_group,positive,sharma,0.9968133390738579
+log_views,split_group,positive,akshay,0.9861686618862454
+log_views,split_group,positive,apple,0.9746596775816514
+log_views,split_group,positive,karol,0.9731834793236128
+log_views,split_group,negative,reaction,-2.557000083113064
+log_views,split_group,negative,celtic,-1.4539066432314214
+log_views,split_group,negative,rangers,-1.30427047941806
+log_views,split_group,negative,canada,-1.1537339505432433
+log_views,split_group,negative,review,-1.1167102287180652
+log_views,split_group,negative,emmerdale,-1.1076840897928901
+log_views,split_group,negative,leafs,-1.0658711350072163
+log_views,split_group,negative,premiership,-1.0355459389689259
+log_views,split_group,negative,reacts,-0.9969246086799022
+log_views,split_group,negative,raptors,-0.9883176955365787
+log_views,split_group,negative,ashens,-0.986410226907418
+log_views,split_group,negative,nhl,-0.9698384897613301
+log_views,split_group,negative,breakdown,-0.8955197265234615
+log_views,split_group,negative,christmas,-0.8623676208176729
+log_views,split_group,negative,england,-0.8459033692081563
+log_views,split_group,negative,mv teaser,-0.8454334052122946
+log_views,split_group,negative,love island,-0.8282720059040882
+log_views,split_group,negative,uk,-0.8038609613531373
+log_views,split_group,negative,official audio,-0.7817936124569071
+log_views,split_group,negative,goldbridge,-0.7696367887534669
+log_views,split_group,negative,ina,-0.76388340467544
+log_views,split_group,negative,kermode,-0.7615592506125034
+log_views,split_group,negative,eastenders,-0.7603719663938188
+log_views,split_group,negative,news,-0.7602299607549
+log_views,split_group,negative,asmr,-0.7591095645218227
+log_views,split_group,negative,hollyoaks,-0.7545512725136723
+log_views,split_group,negative,coronation street,-0.7527027827904248
+log_views,split_group,negative,haul,-0.7511408587233346
+log_views,split_group,negative,rugby,-0.7329252499350741
+log_views,split_group,negative,audio,-0.7294376448204598
+log_likes_per_view,split_group,positive,stray kids,2.142097482861161
+log_likes_per_view,split_group,positive,bts,1.877894625078339
+log_likes_per_view,split_group,positive,blackpink,1.7485206428223001
+log_likes_per_view,split_group,positive,mv teaser,1.5223389200161794
+log_likes_per_view,split_group,positive,j hope,1.4733554284577013
+log_likes_per_view,split_group,positive,lovejoy,1.4649567677963249
+log_likes_per_view,split_group,positive,enhypen,1.4098681281528178
+log_likes_per_view,split_group,positive,rosé,1.40903099124385
+log_likes_per_view,split_group,positive,heartstopper,1.35113676068623
+log_likes_per_view,split_group,positive,rm,1.3418990344266892
+log_likes_per_view,split_group,positive,jimin,1.2986720990865885
+log_likes_per_view,split_group,positive,xxxtentacion,1.2976065226802436
+log_likes_per_view,split_group,positive,game commercial,1.255999152623079
+log_likes_per_view,split_group,positive,skz,1.23409648413383
+log_likes_per_view,split_group,positive,babbu maan,1.2004660329985775
+log_likes_per_view,split_group,positive,babbu,1.1960440523852547
+log_likes_per_view,split_group,positive,jin,1.1950376137439853
+log_likes_per_view,split_group,positive,liam payne,1.1698433473280252
+log_likes_per_view,split_group,positive,payne,1.1698433473280252
+log_likes_per_view,split_group,positive,flightreacts to,1.148185584045984
+log_likes_per_view,split_group,positive,conan gray,1.1273328324462966
+log_likes_per_view,split_group,positive,series official,1.0941999376371279
+log_likes_per_view,split_group,positive,mori,1.0933002852107143
+log_likes_per_view,split_group,positive,tor,1.0762913538286774
+log_likes_per_view,split_group,positive,k pop,1.0717354574260547
+log_likes_per_view,split_group,positive,kook,1.0604485699536959
+log_likes_per_view,split_group,positive,girl in,1.0523887078390979
+log_likes_per_view,split_group,positive,mitski,1.0170286756336626
+log_likes_per_view,split_group,positive,predictions,1.0145527407838606
+log_likes_per_view,split_group,positive,flightreacts,1.0141096786492374
+log_likes_per_view,split_group,negative,big game,-3.7686454946052117
+log_likes_per_view,split_group,negative,paramount,-3.528922345711783
+log_likes_per_view,split_group,negative,commercial,-3.5035041339997686
+log_likes_per_view,split_group,negative,m s,-2.768805011091861
+log_likes_per_view,split_group,negative,emmerdale,-2.659461482550398
+log_likes_per_view,split_group,negative,2022 movie,-2.523617778701809
+log_likes_per_view,split_group,negative,highlights,-2.4588382157852617
+log_likes_per_view,split_group,negative,mayo,-2.391587547076904
+log_likes_per_view,split_group,negative,a short,-2.387115223375791
+log_likes_per_view,split_group,negative,teaser paramount,-2.3812189891847826
+log_likes_per_view,split_group,negative,prodigy,-2.3233857871688843
+log_likes_per_view,split_group,negative,taste of,-2.275755621339445
+log_likes_per_view,split_group,negative,showtime,-2.2402609486599494
+log_likes_per_view,split_group,negative,ina,-2.1779085158435536
+log_likes_per_view,split_group,negative,game ad,-2.1391088349778364
+log_likes_per_view,split_group,negative,theaters,-2.1308876849347307
+log_likes_per_view,split_group,negative,eastenders,-2.0139660568316193
+log_likes_per_view,split_group,negative,wives,-1.972055568762316
+log_likes_per_view,split_group,negative,trailer starz,-1.9529787124791893
+log_likes_per_view,split_group,negative,x the,-1.9280340246586627
+log_likes_per_view,split_group,negative,magic the,-1.9074108853979592
+log_likes_per_view,split_group,negative,this morning,-1.9015048826053977
+log_likes_per_view,split_group,negative,doorbell,-1.895310856961842
+log_likes_per_view,split_group,negative,auditions,-1.894086644115884
+log_likes_per_view,split_group,negative,ringtv,-1.8839045582446632
+log_likes_per_view,split_group,negative,searchlight pictures,-1.8677929837887088
+log_likes_per_view,split_group,negative,searchlight,-1.8677929837887088
+log_likes_per_view,split_group,negative,antiques roadshow,-1.8563075842714083
+log_likes_per_view,split_group,negative,antiques,-1.8563075842714083
+log_likes_per_view,split_group,negative,privacy,-1.8281224949074995
+log_comments_per_view,split_group,positive,babbu,1.3177200483543487
+log_comments_per_view,split_group,positive,reaction,1.2879003130226898
+log_comments_per_view,split_group,positive,babbu maan,1.2691468889538131
+log_comments_per_view,split_group,positive,review,1.2605449061789684
+log_comments_per_view,split_group,positive,my,0.9256948192506732
+log_comments_per_view,split_group,positive,celtic,0.9064357284258563
+log_comments_per_view,split_group,positive,ddg,0.9026775812282363
+log_comments_per_view,split_group,positive,breakdown,0.8977320178056013
+log_comments_per_view,split_group,positive,rant,0.8661144666931967
+log_comments_per_view,split_group,positive,bts 방탄소년단,0.8648053845199115
+log_comments_per_view,split_group,positive,방탄소년단,0.8648053845199115
+log_comments_per_view,split_group,positive,update,0.8583231539887026
+log_comments_per_view,split_group,positive,audio,0.8504114860806636
+log_comments_per_view,split_group,positive,roblox,0.8450283220789446
+log_comments_per_view,split_group,positive,movie review,0.8434962270526694
+log_comments_per_view,split_group,positive,announcement,0.8373666204302843
+log_comments_per_view,split_group,positive,leafs,0.8319299751579464
+log_comments_per_view,split_group,positive,ashens,0.8300923087588782
+log_comments_per_view,split_group,positive,xxxtentacion,0.8190014969173999
+log_comments_per_view,split_group,positive,camping,0.8143635507724316
+log_comments_per_view,split_group,positive,predictions,0.8000257708032908
+log_comments_per_view,split_group,positive,fan,0.7960504491323112
+log_comments_per_view,split_group,positive,stray kids,0.7919156193271673
+log_comments_per_view,split_group,positive,bts,0.7875971306783439
+log_comments_per_view,split_group,positive,tataloo,0.7749194273548988
+log_comments_per_view,split_group,positive,lovejoy,0.7642233310113028
+log_comments_per_view,split_group,positive,we,0.7603179270738161
+log_comments_per_view,split_group,positive,smg4,0.7556385446703525
+log_comments_per_view,split_group,positive,album,0.751550092923798
+log_comments_per_view,split_group,positive,goodbye,0.7455575724178803
+log_comments_per_view,split_group,negative,shorts,-4.200127030109274
+log_comments_per_view,split_group,negative,official trailer,-2.1763126034903744
+log_comments_per_view,split_group,negative,commercial,-1.7626563942030986
+log_comments_per_view,split_group,negative,paramount,-1.7607834014470747
+log_comments_per_view,split_group,negative,highlights,-1.6959136233118417
+log_comments_per_view,split_group,negative,lotto draw,-1.457328890902411
+log_comments_per_view,split_group,negative,lotto,-1.457328890902411
+log_comments_per_view,split_group,negative,lottery lotto,-1.457328890902411
+log_comments_per_view,split_group,negative,national lottery,-1.457328890902411
+log_comments_per_view,split_group,negative,draw results,-1.457328890902411
+log_comments_per_view,split_group,negative,results from,-1.457328890902411
+log_comments_per_view,split_group,negative,sonic,-1.3776775318203325
+log_comments_per_view,split_group,negative,crossfit,-1.3581365240324696
+log_comments_per_view,split_group,negative,results,-1.3539299452779365
+log_comments_per_view,split_group,negative,bad guys,-1.35086939579552
+log_comments_per_view,split_group,negative,big game,-1.3264933147011748
+log_comments_per_view,split_group,negative,the national,-1.2851981977646092
+log_comments_per_view,split_group,negative,the voice,-1.2267002241544889
+log_comments_per_view,split_group,negative,pov,-1.2118885993625002
+log_comments_per_view,split_group,negative,lottery,-1.191552725832827
+log_comments_per_view,split_group,negative,hd,-1.1909654076908944
+log_comments_per_view,split_group,negative,auditions,-1.169453306163659
+log_comments_per_view,split_group,negative,draw,-1.140998585180578
+log_comments_per_view,split_group,negative,trailer 2,-1.1058685560228334
+log_comments_per_view,split_group,negative,ina,-1.0979326597842192
+log_comments_per_view,split_group,negative,sidemen,-1.0766203476754612
+log_comments_per_view,split_group,negative,moments,-1.0677136846264434
+log_comments_per_view,split_group,negative,trailer paramount,-1.051623350875788
+log_comments_per_view,split_group,negative,on youtube,-1.0320032674298307
+log_comments_per_view,split_group,negative,election results,-1.030009557656358
+log_views,split_time,positive,league highlights,2.3934567615196918
+log_views,split_time,positive,m v,2.268449969644771
+log_views,split_time,positive,olympics nbc,2.0965657681388765
+log_views,split_time,positive,permissiontodance,1.779639951311403
+log_views,split_time,positive,2022 fifa,1.7550544844587064
+log_views,split_time,positive,in search,1.723380425428644
+log_views,split_time,positive,bts,1.666608343001018
+log_views,split_time,positive,epl,1.5159210019065066
+log_views,split_time,positive,teaser trailer,1.447941344235856
+log_views,split_time,positive,karthik,1.4324411216496635
+log_views,split_time,positive,trailer starz,1.4242629684963448
+log_views,split_time,positive,joe biden,1.3951180820395428
+log_views,split_time,positive,mv,1.3910812966427668
+log_views,split_time,positive,india,1.379179119760776
+log_views,split_time,positive,epl highlights,1.34469832310491
+log_views,split_time,positive,teaser paramount,1.3154725081560756
+log_views,split_time,positive,deadpool,1.3093661474551428
+log_views,split_time,positive,cup 2022,1.301281248571851
+log_views,split_time,positive,pink venom,1.2482949380265387
+log_views,split_time,positive,trick,1.2469380231750669
+log_views,split_time,positive,v india,1.2289724361167325
+log_views,split_time,positive,nhl game,1.2276345836419538
+log_views,split_time,positive,island 2021,1.2228078963722715
+log_views,split_time,positive,beirut,1.2198291862059585
+log_views,split_time,positive,gaza,1.2037217623741545
+log_views,split_time,positive,tru,1.200044888546731
+log_views,split_time,positive,bts performs,1.1947547022787879
+log_views,split_time,positive,akshay kumar,1.1720126329407359
+log_views,split_time,positive,ronaldo,1.165019475795133
+log_views,split_time,positive,t20i,1.1433381844626371
+log_views,split_time,negative,mv teaser,-2.6708037518553294
+log_views,split_time,negative,raptors,-1.872680709813243
+log_views,split_time,negative,draw emirates,-1.855262614556994
+log_views,split_time,negative,league nbc,-1.605537188011289
+log_views,split_time,negative,league 2020,-1.4573510097796807
+log_views,split_time,negative,v teaser,-1.3054750999461298
+log_views,split_time,negative,raptors at,-1.2511651023606578
+log_views,split_time,negative,lab,-1.2284902270726015
+log_views,split_time,negative,dev,-1.2222909106277402
+log_views,split_time,negative,wanderers,-1.2179964739965061
+log_views,split_time,negative,live with,-1.2175181711961272
+log_views,split_time,negative,audio,-1.2136446227519146
+log_views,split_time,negative,full match,-1.1988063043929182
+log_views,split_time,negative,on snl,-1.1598301866576108
+log_views,split_time,negative,song 2023,-1.135254862145428
+log_views,split_time,negative,ruby,-1.1348761868062385
+log_views,split_time,negative,album,-1.1218650344472691
+log_views,split_time,negative,short highlights,-1.1151145128719215
+log_views,split_time,negative,tease,-1.1142003391316262
+log_views,split_time,negative,featurette,-1.1056483372400328
+log_views,split_time,negative,birmingham,-1.099525704738974
+log_views,split_time,negative,v reaction,-1.0967357477562096
+log_views,split_time,negative,rehearsal,-1.0857671909955817
+log_views,split_time,negative,live at,-1.0853272292564362
+log_views,split_time,negative,blackpink the,-1.0828024437090167
+log_views,split_time,negative,visualizer,-1.079310110503014
+log_views,split_time,negative,official lyric,-1.0698860930682308
+log_views,split_time,negative,new fortnite,-1.0649580522339663
+log_views,split_time,negative,first interview,-1.0526974845634551
+log_views,split_time,negative,ii warzone,-1.0364432920208824
+log_likes_per_view,split_time,positive,bts,1.9526188802454858
+log_likes_per_view,split_time,positive,stray kids,1.8987859793076673
+log_likes_per_view,split_time,positive,mv teaser,1.8486299972854787
+log_likes_per_view,split_time,positive,enhypen,1.6442028540363371
+log_likes_per_view,split_time,positive,j hope,1.5039979605736742
+log_likes_per_view,split_time,positive,blackpink,1.476212853856004
+log_likes_per_view,split_time,positive,lovejoy,1.364997318961418
+log_likes_per_view,split_time,positive,rm,1.2694160152090288
+log_likes_per_view,split_time,positive,jimin,1.1997128719191215
+log_likes_per_view,split_time,positive,heartstopper,1.1916155079664814
+log_likes_per_view,split_time,positive,xxxtentacion,1.18089872750691
+log_likes_per_view,split_time,positive,tor,1.133801750342203
+log_likes_per_view,split_time,positive,jin,1.1187939199619013
+log_likes_per_view,split_time,positive,txt,1.0755224575253817
+log_likes_per_view,split_time,positive,predictions,1.0615683529528963
+log_likes_per_view,split_time,positive,euphoria,1.039742619572408
+log_likes_per_view,split_time,positive,skz,1.0338965606445718
+log_likes_per_view,split_time,positive,nct,1.0185042625341385
+log_likes_per_view,split_time,positive,babbu,1.000379374240533
+log_likes_per_view,split_time,positive,dan,0.9854737355223033
+log_likes_per_view,split_time,positive,pitch meeting,0.9484787667509623
+log_likes_per_view,split_time,positive,true facts,0.9451419276938343
+log_likes_per_view,split_time,positive,trailer disney,0.9427781651220145
+log_likes_per_view,split_time,positive,442oons,0.9332241067988775
+log_likes_per_view,split_time,positive,van life,0.9279641949941972
+log_likes_per_view,split_time,positive,v teaser,0.9230331515149535
+log_likes_per_view,split_time,positive,japan s,0.9223182284929821
+log_likes_per_view,split_time,positive,the movie,0.9166876638695337
+log_likes_per_view,split_time,positive,anime,0.9037023280309486
+log_likes_per_view,split_time,positive,hd a24,0.8849187801272329
+log_likes_per_view,split_time,negative,paramount,-3.228150704931565
+log_likes_per_view,split_time,negative,2021 movie,-2.7094660886884476
+log_likes_per_view,split_time,negative,highlights,-2.3671286266111786
+log_likes_per_view,split_time,negative,emmerdale,-2.2455498323420953
+log_likes_per_view,split_time,negative,pub,-2.23968551796178
+log_likes_per_view,split_time,negative,teaser paramount,-2.166956223014111
+log_likes_per_view,split_time,negative,magic the,-2.0878337874410886
+log_likes_per_view,split_time,negative,prime video,-2.0578964187990647
+log_likes_per_view,split_time,negative,ina,-2.057712265220681
+log_likes_per_view,split_time,negative,theaters,-2.000672494831448
+log_likes_per_view,split_time,negative,lineup,-1.9572380101607458
+log_likes_per_view,split_time,negative,official trailer,-1.8390125826076158
+log_likes_per_view,split_time,negative,privacy,-1.8313417544395403
+log_likes_per_view,split_time,negative,2022 movie,-1.7954493464958419
+log_likes_per_view,split_time,negative,ringtv,-1.7544964219996817
+log_likes_per_view,split_time,negative,trailer showtime,-1.7535082069104122
+log_likes_per_view,split_time,negative,hd,-1.6916805436874547
+log_likes_per_view,split_time,negative,eastenders,-1.683436817522431
+log_likes_per_view,split_time,negative,iphone 14,-1.6631139973019722
+log_likes_per_view,split_time,negative,meghan,-1.6570927052769522
+log_likes_per_view,split_time,negative,soul official,-1.6412398113054714
+log_likes_per_view,split_time,negative,showtime,-1.635011093070625
+log_likes_per_view,split_time,negative,peacock,-1.6332790339289485
+log_likes_per_view,split_time,negative,dw documentary,-1.6269997786502512
+log_likes_per_view,split_time,negative,searchlight,-1.6130941834434214
+log_likes_per_view,split_time,negative,searchlight pictures,-1.6130941834434214
+log_likes_per_view,split_time,negative,trailer searchlight,-1.6099371279203425
+log_likes_per_view,split_time,negative,holidays,-1.5758673188473167
+log_likes_per_view,split_time,negative,the holidays,-1.5758673188473167
+log_likes_per_view,split_time,negative,wilson,-1.5722975406613515
+log_comments_per_view,split_time,positive,babbu,2.655375680392408
+log_comments_per_view,split_time,positive,babbu maan,2.3589384085535325
+log_comments_per_view,split_time,positive,stray kids,2.096920074607325
+log_comments_per_view,split_time,positive,xxxtentacion,1.9276822891043495
+log_comments_per_view,split_time,positive,lovejoy,1.8965559145287454
+log_comments_per_view,split_time,positive,kids skz,1.8941795154050398
+log_comments_per_view,split_time,positive,skz,1.8034918150347428
+log_comments_per_view,split_time,positive,tor,1.7442808134971097
+log_comments_per_view,split_time,positive,expressions,1.6904548843742102
+log_comments_per_view,split_time,positive,bisping,1.531772243096894
+log_comments_per_view,split_time,positive,smg4,1.5265405236777623
+log_comments_per_view,split_time,positive,minecraft live,1.512820129940854
+log_comments_per_view,split_time,positive,enhypen,1.4915684510114966
+log_comments_per_view,split_time,positive,meta runner,1.4907433303064548
+log_comments_per_view,split_time,positive,j hope,1.4889964173394157
+log_comments_per_view,split_time,positive,treasure,1.4879493379000543
+log_comments_per_view,split_time,positive,camping,1.4731505514696026
+log_comments_per_view,split_time,positive,and violet,1.4716282685329918
+log_comments_per_view,split_time,positive,movie trailer,1.399117167280552
+log_comments_per_view,split_time,positive,eurovision,1.3758582647736326
+log_comments_per_view,split_time,positive,my birthday,1.3667486726034508
+log_comments_per_view,split_time,positive,disney s,1.3338513449140048
+log_comments_per_view,split_time,positive,rant,1.327458288111763
+log_comments_per_view,split_time,positive,jin,1.324628673774804
+log_comments_per_view,split_time,positive,death,1.3131818146479297
+log_comments_per_view,split_time,positive,visions,1.3118515919096398
+log_comments_per_view,split_time,positive,exo,1.308468124987579
+log_comments_per_view,split_time,positive,ottawa,1.2996841791298108
+log_comments_per_view,split_time,positive,ashens,1.2836379165159153
+log_comments_per_view,split_time,positive,simon jordan,1.2835624278418334
+log_comments_per_view,split_time,negative,election results,-4.495847134120676
+log_comments_per_view,split_time,negative,champagne,-3.9589591237205277
+log_comments_per_view,split_time,negative,bad guys,-3.904819899325669
+log_comments_per_view,split_time,negative,paramount,-3.6785119811933167
+log_comments_per_view,split_time,negative,full match,-3.4578597434017575
+log_comments_per_view,split_time,negative,trillion,-3.37718210096943
+log_comments_per_view,split_time,negative,trolls,-3.287672207821121
+log_comments_per_view,split_time,negative,coverage,-3.2036279335018913
+log_comments_per_view,split_time,negative,pokémon violet,-3.183982415465793
+log_comments_per_view,split_time,negative,pinocchio,-3.0968157360132533
+log_comments_per_view,split_time,negative,together official,-3.0555796502215617
+log_comments_per_view,split_time,negative,join the,-3.0258495676437387
+log_comments_per_view,split_time,negative,shorts,-3.005536405935823
+log_comments_per_view,split_time,negative,permissiontodance,-2.946695072169684
+log_comments_per_view,split_time,negative,prologue,-2.8975304688124615
+log_comments_per_view,split_time,negative,crossfit,-2.882573434680448
+log_comments_per_view,split_time,negative,s big,-2.880524296568832
+log_comments_per_view,split_time,negative,on youtube,-2.764720247252856
+log_comments_per_view,split_time,negative,live 2020,-2.7627361719931414
+log_comments_per_view,split_time,negative,summer of,-2.7358859942192444
+log_comments_per_view,split_time,negative,pub,-2.6701406293590977
+log_comments_per_view,split_time,negative,domino,-2.661007085884391
+log_comments_per_view,split_time,negative,the gathering,-2.633084873285451
+log_comments_per_view,split_time,negative,an announcement,-2.5833822106148223
+log_comments_per_view,split_time,negative,teenage,-2.5543792423917533
+log_comments_per_view,split_time,negative,the bad,-2.5070893044436717
+log_comments_per_view,split_time,negative,mario bros,-2.494412966948359
+log_comments_per_view,split_time,negative,wish,-2.472990605219416
+log_comments_per_view,split_time,negative,give me,-2.455785788724171
+log_comments_per_view,split_time,negative,tip,-2.4519562655329334
