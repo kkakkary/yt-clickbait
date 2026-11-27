@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+rootdir: .
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.14.8
+collected 75 items / 10 deselected / 65 selected
+
+tests/test_clean.py ........                                             [ 12%]
+tests/test_comparison.py .....                                           [ 20%]
+tests/test_effects.py ......                                             [ 29%]
+tests/test_embedding_model.py ....                                       [ 35%]
+tests/test_embeddings.py .                                               [ 36%]
+tests/test_language.py .                                                 [ 38%]
+tests/test_report.py .....                                               [ 46%]
+tests/test_rule_based_model.py .........                                 [ 60%]
+tests/test_rules.py ......                                               [ 69%]
+tests/test_sentiment.py ..                                               [ 72%]
+tests/test_split.py ....                                                 [ 78%]
+tests/test_tfidf.py ....                                                 [ 84%]
+tests/test_tfidf_model.py ..........                                     [100%]
+
+=============================== warnings summary ===============================
+tests/test_clean.py::test_unparseable_dates_raise
+  ./src/ytclickbait/data/load.py:48: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+    parsed = pd.to_datetime(df[col], utc=True, errors="coerce")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: ./reports/test-evidence/fast.xml -
+================ 65 passed, 10 deselected, 1 warning in 11.13s =================
