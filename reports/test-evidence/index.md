@@ -54,5 +54,5 @@ The fast suite ran against the code published as `ca6a14c`. FT-1 and FT-2 were v
 | FT-5 | not run | Run with `--full` |
 | FT-3 | reports available | [Held-out model metrics](../model_comparison.csv) · [OLS coefficient table](../effects.csv) |
 | FT-6 | evidence pending | Three-target embedding comparison on both splits |
-| FT-7 | evidence pending | Cluster report and human review |
+| FT-7 | report generated | [Cluster results](../embedding_clusters.csv) · [Interpretation](../../notebooks/04_report.ipynb) · Full acceptance pending FT-6 and human review |
 | FT-8 | reports available | [TF-IDF metrics](../tfidf_metrics.csv) · [Top terms](../tfidf_top_terms.csv) |

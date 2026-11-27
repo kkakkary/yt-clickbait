@@ -141,7 +141,7 @@ Each requirement traces to the code that implements it and the test(s) that veri
 | FR-9 | The system shall produce a report with figures ranking tactics by effect size (most effective) and by high usage with near-zero or negative effect (most overused), for views and engagement. | H / V | notebook 03, `reports/` (not started) | Review of `reports/figures/` |
 | FR-10 | The system shall produce one embedding per video from its `title` (the latest-snapshot title) with `all-MiniLM-L6-v2`: 384 `float32` values, L2 norm 1 ± 1e-5, rows in `videos.parquet` order, saved to `embeddings.npy`. Saved vectors shall be reused only when the titles, their order and the model name all match the run that produced them; otherwise they are recomputed. | H / S | `features/embeddings.py` | UT-8, UT-12, UT-13, `test_embedding_cache_rejects_changed_titles` |
 | FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (`fit_ridge`, `score` built; FT-6 run pending) | UT-15, UT-16, UT-17, FT-6 |
-| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `models/embedding_model.py` (`fit_clusters` built; FT-7 report pending) | UT-18, FT-7 |
+| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `scripts/run_embedding_clusters.py`, [cluster report](../reports/embedding_clusters.csv) | UT-18, FT-7 |
 | FR-13 | The system shall fit Ridge on [TF-IDF + controls] for each of the three targets, using only train rows with a non-missing target, choose alpha by cross-validation on those rows (folds grouped by `channel_id` for `split_group`), and report RMSE, R², alpha and row counts on test rows for both splits, next to a controls-only Ridge. Controls are `log_age_days`, `n_tags`, `log(1 + desc_len)`, `n_countries`, category, `publish_week`, `publish_hour_utc`, `publish_dow_utc`, plus the channel baseline for `split_time` only. It shall also save the 30 most positive and 30 most negative TF-IDF coefficients per target and split. | H / V | `models/tfidf_model.py`, `scripts/run_tfidf_model.py`, `notebooks/03_tfidf_results.ipynb` | UT-19 – UT-44, FT-8, FT-9 |
 
 ### 2.2 Non-Functional Requirements
@@ -547,7 +547,8 @@ While embedding implementation is still pending, the acceptance tests have surpr
 | FR-8 title / trending history, categories | **Met** (2.9 % of videos changed title) |
 | FR-9 final report and figures | **Met** (`notebooks/04_report.ipynb`; six figures; rankings from `report.py`) |
 | FR-10 embedding generation | **Met** (`embeddings.npy`, 78,180 × 384, committed via LFS with its `.sha256`) |
-| FR-11 embedding models, FR-12 embedding clusters | **In progress**: `score()`, `fit_ridge()` and `fit_clusters()` built in `models/embedding_model.py` after the acceptance tests; real-data runs (FT-6, FT-7) next |
+| FR-11 embedding models | **In progress** (FT-6 pending) |
+| FR-12 embedding clusters | **Met** (8 real-data clusters, [results](../reports/embedding_clusters.csv) and [interpretation](../notebooks/04_report.ipynb)) |
 | NFR-1 leakage, NFR-2 reproducibility, NFR-4 alignment, NFR-5, NFR-6 | **Met** |
 | NFR-3 performance | **Met** for tests (fast suite 7.6 s on an M2 MacBook Air, budget 10 s); feature-build timing to be recorded |
 | UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 65 tests across 13 files) |
@@ -557,7 +558,8 @@ While embedding implementation is still pending, the acceptance tests have surpr
 | UT-8 – UT-14 | **Passing** (UT-14 skipped without a GPU). UT-11's bar lowered from 0.9 to 0.85 after measuring 0.89; EA-3 updated |
 | UT-15 – UT-18 | **Passing** (UT-15 and UT-18 also checked to fail against a deliberately leaky version) |
 | UT-19 – UT-28, FT-8 | **Passing** (UT-19, UT-24 and UT-25 mirror the NFR-1 leakage tests; a review found the baseline-fill leak and the vocabulary check, both fixed) |
-| FT-6, FT-7 | **Not yet run** (need the real-data notebooks) |
+| FT-6 | **Pending** |
+| FT-7 | **Report generated** (full acceptance pending FT-6 and human review) |
 
 **What we'd change in the spec:** the proposal only controlled for video age; we'd have written
 the "no leakage" and "creator vs. title" requirements up front. The within-channel time split,
