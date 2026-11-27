@@ -59,8 +59,8 @@ therefore fit both versions and compare:
 
 - *Across creators* — `split_group`: every channel is entirely train or entirely test.
   Answers "does the title help predict views for a creator the model has never seen?"
-- *Within creators* — `split_time`: channels with ≥ 10 videos; each channel's latest 20 %
-  are test, plus a channel baseline ("this creator's usual views"). OLS with **channel fixed
+- *Within creators* — `split_time`: channels with ≥ 10 videos; each channel's latest
+  `ceil(0.20 × n)` videos are test (equal timestamps follow input row order), plus a channel baseline ("this creator's usual views"). OLS with **channel fixed
   effects** compares a creator's titles only against that creator's other titles, like a
   per-creator model pooled across many creators.
 - An effect that shrinks or flips sign from pooled to within-creator was about *which
@@ -132,7 +132,7 @@ Each requirement traces to the code that implements it and the test(s) that veri
 |----|-------------|-----------|----------------|-------------|
 | ★FR-1 | The system shall reduce the raw daily snapshot rows to **exactly one row per `video_id`**, keeping the snapshot with the latest `trending_date` (ties broken by highest `view_count`), and shall drop rows with missing `video_id`, `channelId`, `trending_date`, `publishedAt`, or `view_count ≤ 0`. | H / S | `data/clean.py::clean` | UT-1, FT-1 |
 | ★FR-2 | The system shall compute, for every title, the 14 clickbait features listed in §3.2 (`rule_features.parquet`), with all outputs numeric and index-aligned to the input titles. | H / S | `features/rules.py` | UT-2, UT-3, FT-2 |
-| ★FR-3 | The system shall assign every video to `split_group` ∈ {train, test} such that **no `channel_id` appears in both**, and to `split_time` ∈ {train, test, excluded} such that, for each channel with ≥ 10 videos, the latest 20 % by `published_at` are test and all test videos are published after all train videos of that channel. | H / S | `data/split.py` | UT-4, UT-5 |
+| ★FR-3 | The system shall assign every video to `split_group` ∈ {train, test} such that **no `channel_id` appears in both**, and to `split_time` ∈ {train, test, excluded} as follows. Videos from channels with fewer than 10 videos are excluded. Within each remaining channel with `n` videos, sort by `published_at` ascending, preserving input row order for equal timestamps. Assign the last `ceil(0.20 × n)` videos to test and the rest to train. The latest train timestamp may equal the earliest test timestamp. | H / S | `data/split.py` | UT-4, UT-5 |
 | FR-4 | The system shall drop a title as non-English **only** if it is mostly non-Latin script, or the detector's top guess is non-English *and* it contains common French/Spanish words or ≥ 20 % accented words; drop counts shall be logged per country. | H / V | `data/language.py` | `test_language.py`, FT-1 |
 | FR-5 | The system shall produce VADER (compound, pos, neu, neg) and RoBERTa (neg, neu, pos, pos−neg) sentiment for each title. | M / S | `features/sentiment.py` | `test_sentiment.py` |
 | FR-6 | The system shall fit a controls-only Ridge baseline and title-feature models (rules, TF-IDF, embeddings) for `log_views`, and report RMSE and R² on the test rows of both splits. | H / V | `models/` (in progress) | FT-3 |
