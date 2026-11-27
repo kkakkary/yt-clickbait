@@ -21,7 +21,9 @@ analysts studying engagement.
 | Real data downloaded and processed (78,180 videos) | Done |
 | EDA and feature notebooks | Done (run on real data) |
 | TF-IDF Ridge model for views and engagement | Done: `scripts/run_tfidf_model.py`, `notebooks/03_tfidf_results.ipynb` |
-| Rules and embedding models, interpretation by category | Next, see [Next steps](#next-steps) |
+| Model comparison (rules, TF-IDF, embeddings), OLS effects pooled and within creator, by category | Done: `scripts/run_comparison.py`, `scripts/run_effects.py` |
+| Final report and figures | Done: `notebooks/04_report.ipynb` |
+| Robustness checks (title changes, country, language filter, sentiment) | Next, see [Next steps](#next-steps) |
 
 ## Data
 
@@ -67,6 +69,15 @@ uv run python scripts/build_dataset.py    # raw CSVs -> videos.parquet + split.p
 uv run python scripts/build_features.py   # -> rule features, sentiment, TF-IDF, embeddings
 ```
 
+Then the models and the report (about 4 minutes in total):
+
+```bash
+uv run python scripts/run_comparison.py   # reports/model_comparison.csv
+uv run python scripts/run_effects.py      # reports/effects.csv, usage_rates.csv
+uv run python scripts/run_tfidf_model.py  # reports/tfidf_*.csv
+# then run notebooks/04_report.ipynb for the figures
+```
+
 `build_features.py --skip-roberta --skip-embeddings` runs in seconds if you only need the
 rule features and VADER. First full run downloads two models (about 600 MB) and takes several
 minutes. It uses the Apple GPU (MPS) when available.
@@ -93,6 +104,9 @@ src/ytclickbait/
   features/embeddings.py   all-MiniLM-L6-v2 sentence embeddings
   resources/clickbait_words.txt   Editable clickbait phrase list
   models/tfidf_model.py    Ridge on TF-IDF + controls, scoring, top terms
+  models/comparison.py     Controls vs rules vs TF-IDF vs embeddings, both splits
+  models/effects.py        OLS with channel-clustered CIs, pooled and fixed effects
+  report.py                Rank tactics: effective, overused, confounded, backlash
   models/                  Other models: next phase
 tests/                     pytest suite on small synthetic data (no real data needed)
 ```
