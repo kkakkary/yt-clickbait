@@ -1,0 +1,27 @@
+/Users/runner/work/crossbow/crossbow/arrow/cpp/src/arrow/util/cpu_info.cc:181: IOError: sysctlbyname failed for 'hw.l1dcachesize'. Detail: [errno 1] Operation not permitted
+/Users/runner/work/crossbow/crossbow/arrow/cpp/src/arrow/util/cpu_info.cc:181: IOError: sysctlbyname failed for 'hw.l2cachesize'. Detail: [errno 1] Operation not permitted
+/Users/runner/work/crossbow/crossbow/arrow/cpp/src/arrow/util/cpu_info.cc:181: IOError: sysctlbyname failed for 'hw.l3cachesize'. Detail: [errno 1] Operation not permitted
+============================= test session starts ==============================
+platform darwin -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+rootdir: .
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.14.8
+collected 49 items / 47 deselected / 2 selected
+
+tests/test_spec_pipeline.py videos=78180 train=63437 test=14743 SHA256={'videos': 'f0131900cf6b23d3a0410f5cd5f19a52e921fafaaf4ace5356ce20cd293671aa', 'split': 'f4f63b9e415e1269ae9ed4be33cc17c74066988eab273919fe7cc76e4177c3af'}
+INFO     build_dataset:build_dataset.py:28 Snapshot rows: 806320, date range 2020-08-12 to 2024-04-15
+INFO     build_dataset:build_dataset.py:41 Non-English videos dropped: 4050 of 82230 (by country they trended in: {'CA': 3111, 'US': 1077, 'GB': 370})
+INFO     build_dataset:build_dataset.py:51 Videos with more than one title: 2269 (2.9%)
+INFO     build_dataset:build_dataset.py:71 Split counts:
+          split_group  split_time
+excluded          NaN       24489
+test          14743.0       11487
+train         63437.0       42204
+INFO     build_dataset:build_dataset.py:77 Wrote 78180 videos to <pytest-temp>/pipeline0/data/processed/videos.parquet
+
+.Feature build: 12.71s; rules=(78180, 15), sentiment=(78180, 5), TF-IDF=(78180, 21389); reordered split rejected
+.                                           [100%]
+
+--- generated xml file: ./pipeline.xml ----
+================= 2 passed, 47 deselected in 191.09s (0:03:11) =================

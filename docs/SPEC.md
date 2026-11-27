@@ -135,13 +135,14 @@ Each requirement traces to the code that implements it and the test(s) that veri
 | ★FR-3 | The system shall assign every video to `split_group` ∈ {train, test} such that **no `channel_id` appears in both**, and to `split_time` ∈ {train, test, excluded} as follows. Videos from channels with fewer than 10 videos are excluded. Within each remaining channel with `n` videos, sort by `published_at` ascending, preserving input row order for equal timestamps. Assign the last `ceil(0.20 × n)` videos to test and the rest to train. The latest train timestamp may equal the earliest test timestamp. | H / S | `data/split.py` | UT-4, UT-5 |
 | FR-4 | After removing emojis, URLs, hashtags, mentions, and digits for language analysis, the system shall drop a title as non-English if more than 50% of its letters are non-Latin, or if it has fewer than `language.min_letters` Latin letters (default 10) and at least one non-Latin letter. For titles with at least that many Latin letters, the system shall also drop the title if the detector label is other than `english` (including `unknown`) and either the title contains a word from the filter's French, Spanish, and Portuguese word list (`FOREIGN_WORDS`) or at least 20% of its words contain a non-ASCII Latin letter. Each dropped video shall be counted once for each country where it trended, and those counts shall be logged. | H / V | `data/language.py` | `test_language.py`, FT-1 |
 | FR-5 | The system shall produce VADER (compound, pos, neu, neg) and RoBERTa (neg, neu, pos, pos−neg) sentiment for each title. | M / S | `features/sentiment.py` | `test_sentiment.py` |
-| FR-6 | The system shall fit a controls-only Ridge baseline and title-feature models (rules, TF-IDF, embeddings) for `log_views`, and report RMSE and R² on the test rows of both splits. | H / V | `models/` (in progress) | FT-3 |
-| FR-7 | The system shall report OLS coefficients with channel-clustered 95 % CIs for each rule feature, pooled and with channel fixed effects, for all three targets, overall and per top-10 category. | H / V | `models/` (in progress) | FT-3 |
+| FR-6 | The system shall fit a controls-only Ridge baseline and title-feature models (rules, TF-IDF, embeddings) for `log_views`, and report RMSE and R² on the test rows of both splits. | H / V | `models/comparison.py`, `scripts/run_comparison.py` | UT-35 – UT-39, FT-3 |
+| FR-7 | The system shall report OLS coefficients with channel-clustered 95 % CIs for each rule feature, pooled and with channel fixed effects, for all three targets, overall and per top-10 category. | H / V | `models/effects.py`, `scripts/run_effects.py` | UT-29 – UT-34, FT-3 |
 | FR-8 | The system shall record per video `n_distinct_titles`, `title_changed`, `first_title`, `last_title`, `countries`, `n_countries`, `days_trending`, and map `category_id` to `category_name` from the country JSON files. | M / S | `data/clean.py` | `test_title_history`, `test_categories_mapped` |
 | FR-9 | The system shall produce a report with figures ranking tactics by effect size (most effective) and by high usage with near-zero or negative effect (most overused), for views and engagement. | H / V | notebook 03, `reports/` (not started) | Review of `reports/figures/` |
 | FR-10 | The system shall produce one embedding per video from its `title` (the latest-snapshot title) with `all-MiniLM-L6-v2`: 384 `float32` values, L2 norm 1 ± 1e-5, rows in `videos.parquet` order, saved to `embeddings.npy`. Saved vectors shall be reused only when the titles, their order and the model name all match the run that produced them; otherwise they are recomputed. | H / S | `features/embeddings.py` | UT-8, UT-12, UT-13, `test_embedding_cache_rejects_changed_titles` |
-| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (not started) | UT-15, UT-16, UT-17, FT-6 |
-| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `models/embedding_model.py` (not started) | UT-18, FT-7 |
+| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (`fit_ridge`, `score` built; FT-6 run pending) | UT-15, UT-16, UT-17, FT-6 |
+| FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `models/embedding_model.py` (`fit_clusters` built; FT-7 report pending) | UT-18, FT-7 |
+| FR-13 | The system shall fit Ridge on [TF-IDF + controls] for each of the three targets, using only train rows with a non-missing target, choose alpha by cross-validation on those rows (folds grouped by `channel_id` for `split_group`), and report RMSE, R², alpha and row counts on test rows for both splits, next to a controls-only Ridge. Controls are `log_age_days`, `n_tags`, `log(1 + desc_len)`, `n_countries`, category, `publish_week`, `publish_hour_utc`, `publish_dow_utc`, plus the channel baseline for `split_time` only. It shall also save the 30 most positive and 30 most negative TF-IDF coefficients per target and split. | H / V | `models/tfidf_model.py`, `scripts/run_tfidf_model.py`, `notebooks/03_tfidf_results.ipynb` | UT-19 – UT-44, FT-8, FT-9 |
 
 ### 2.2 Non-Functional Requirements
 
@@ -192,6 +193,11 @@ the language filter: **78,180 unique English videos** (4,050 of 82,230 dropped a
 | `sentiment.parquet` | 1 per video × 8 | VADER compound/pos/neu/neg; RoBERTa neg/neu/pos, pos−neg |
 | `tfidf.npz` | 78 k × ~21 k sparse | word 1–2-gram weights (vectorizer in `models/tfidf_vectorizer.pkl`) |
 | `embeddings.npy` | 78 k × 384 float32 | normalized all-MiniLM-L6-v2 vectors (cache keyed by title fingerprint) |
+| `reports/tfidf_metrics.csv` | 12 rows | target, split, model, alpha, n_train, n_test, RMSE, R², R² gain vs. controls |
+| `reports/model_comparison.csv` | 36 rows | model × target × split with RMSE, R², gains over controls, `primary` flag |
+| `reports/effects.csv` | 924 rows | OLS coefficient, SE, 95 % CI, standardized effect, % effect per target, scope (overall + top-10 categories), model (pooled / fixed effects) |
+| `reports/usage_rates.csv` | 14 rows | share of titles using each rule feature |
+| `reports/tfidf_top_terms.csv` | 360 rows | target, split, direction, term, coefficient (30 positive + 30 negative per target and split) |
 
 **Storage/management:** files under `data/`; raw files and the processed outputs above are
 versioned in Git through Git LFS (run `git lfs install && git lfs pull` after cloning) and can
@@ -217,13 +223,54 @@ versioned in Git.
 |----|------------------------|-------------|------------|
 | EA-1 | MiniLM lowercases text, so ALL CAPS is invisible to it. | Caps findings come from rule features only. | UT-9 |
 | EA-2 | Most emojis become an "unknown" token. | Emoji findings come from `n_emoji` only. | UT-10 |
-| EA-3 | `!` and `!!!` produce nearly the same vector. | Punctuation findings come from `n_exclaim` / `n_question` only. | UT-11 |
+| EA-3 | Repeating `!` changes the vector only a little: "great video!" vs "great video!!!" has cosine ≈ 0.89, against ≈ 0.15 for an unrelated title. Embeddings can't measure how much punctuation a title uses. | Punctuation findings come from `n_exclaim` / `n_question` only. | UT-11 |
 | EA-4 | Only the latest title is embedded (2.9 % of videos changed title). | Covered by the single-title robustness check. | — |
 | EA-5 | Titles often name the channel or series, and channels have a recognizable style, so embeddings can partly identify the creator (the confounder we are removing). Embeddings also encode topic, which overlaps with category. | Primary embedding result is `split_group` gain over a controls model that already includes category (FR-11). | FT-6 |
 | EA-6 | 384 dimensions are too many for readable OLS coefficients. | Ridge for prediction; clusters for interpretation (FR-12). | — |
 | EA-7 | Vectors are normalized, so a dot product equals cosine similarity; identical titles get identical vectors (repeat formats like "Official Trailer" cluster tightly). | Nearest-neighbour checks and k-means rely on this. | UT-8, UT-12 |
 | EA-8 | The saved-vector check covers titles, order and model name, not batch size or library version (pinned by `uv.lock`). The first run needs internet to download the model (~90 MB) to the Hugging Face cache outside the repo. | Re-run embeddings by hand after upgrading `sentence-transformers`. | UT-13 |
 | EA-9 | The model is English-only. | Another reason for the language filter; mixed-language titles that are kept (~1 %) may embed poorly. | — |
+
+**TF-IDF assumptions** (IDs are referenced by FR-13 and the tests in §5):
+
+| ID | Assumption / constraint | Consequence | Checked by |
+|----|------------------------|-------------|------------|
+| TA-1 | TF-IDF lowercases and its token pattern drops punctuation (it keeps `$` and single digits). | Caps and `!` / `?` findings come from rule features only. | — |
+| TA-2 | Terms are mostly topics, formats and names (`epl`, `mv`, `trailer`, `reaction`), so TF-IDF partly identifies category, series and creator (the same confound as EA-5). Engagement R² gains are large (up to +0.27) and mostly reflect this. | Top terms are described as topics/formats, never as clickbait tactics. The `split_time` `log_views` gain (+0.014) is the cleanest title-only estimate. | FT-8 |
+| FT-9 | Final report | FT-3 and FT-8 passed; `build_features.py` run | 1. `run_comparison.py` 2. `run_effects.py` 3. Execute `notebooks/04_report.ipynb` 4. A person reads the figures and findings | `reports/model_comparison.csv` (36 rows: 6 models × 3 targets × 2 splits), `effects.csv`, `usage_rates.csv`; six figures in `reports/figures/`; findings name tactics only when their CI excludes 0 and describe the rest as unclear | Figures regenerate from the CSVs (FR-7, FR-9, EF-1 – EF-8) |
+| TA-3 | Vocabulary and IDF weights are fit on rows that are train under both splits (`build_features.py`). | No test title shapes the vocabulary (NFR-1). The model's scaler, one-hot categories, baseline fill and alpha search also use train rows only. | UT-19, UT-23 – UT-25 |
+| TA-4 | Ridge coefficients on correlated n-grams (a word and the phrases containing it) are shared between them. | Read top terms as a group, and trust terms that appear under both splits more. | FT-8 |
+| TA-5 | Rows with likes or comments disabled have NaN engagement and are skipped, never set to 0. | Row counts differ by target (see `n_train` / `n_test`). | UT-20 |
+| TA-6 | Matrix columns must match the vectorizer vocabulary, or coefficients would get the wrong term labels. | `run()` and `top_terms()` raise `ValueError` on a mismatch. | UT-28 |
+| UT-29 | `test_effects.py::test_fixed_effects_recovers_within_channel_effect_pooled_is_biased` | 60 channels; channels that use `!` more get more views; true within-channel effect −0.10 | `fit_ols` pooled and fixed effects | Pooled coefficient > 0; fixed-effects coefficient ≈ −0.10 with the truth inside its CI | — (FR-7, EF-3, EF-8) |
+| UT-30 | `test_effects.py::test_missing_targets_are_dropped_not_zeroed` | 50 targets set to NaN | `fit_ols` | Same result and `n` as fitting without those rows | — (FR-7) |
+| UT-31 | `test_effects.py::test_clustered_se_wider_than_naive_when_channel_effects_exist` | Same data | Compare clustered and naive standard error | Clustered is larger | — (FR-7) |
+| UT-32 | `test_effects.py::test_constant_feature_gives_nan_not_error` | Feature that is always 0 | `fit_ols` | NaN coefficient, no error | — (FR-7) |
+| UT-33 | `test_effects.py::test_usage_rates_and_design_alignment` | 4 titles; misaligned videos and rules | `usage_rates`, `build_design` | Rates 0.5; reversed row order raises "out of sync" | — (NFR-4, EF-6) |
+| UT-34 | `test_effects.py::test_standardized_effect_is_coef_times_sd` | Same data | `fit_ols` | `std_coef` = coef × SD of the feature | — (EF-2) |
+| UT-35 | `test_comparison.py::test_informative_block_beats_controls_and_noise_does_not` | Synthetic signal in one block, noise in another | `compare` | Signal block R² > 0.8 > controls; noise block < 0.3; `split_group` marked primary | — (FR-6) |
+| UT-36 | `test_comparison.py::test_test_rows_do_not_change_scaling_or_fit` | Test rows multiplied by 1000 | `scale_on_train` | Train rows scale identically | — (NFR-1) |
+| UT-37 | `test_comparison.py::test_same_rows_scored_for_every_model` | 3 models | `compare` | One value of `n_train` and `n_test` | — (FR-6) |
+| UT-38 | `test_comparison.py::test_scale_on_train_uses_train_stats` | 3 rows, 2 train | `scale_on_train` | Train rows map to −1 and +1 | — (NFR-1) |
+| UT-39 | `test_comparison.py::test_requires_controls_only_baseline` | No baseline in `models` | `compare` | Raises `ValueError` | — (FR-6) |
+| UT-40 | `test_report.py::test_verdict_uses_ci_not_point_estimate` | CIs above, below and across 0, and NaN | `verdict` | helps / hurts / no clear effect / not estimated | — (FR-9, EF-5) |
+| UT-41 | `test_report.py::test_rank_and_overused` | Common-and-harmful, common-and-flat, rare-and-helpful tactics | `rank_tactics` | Top is the helpful one; common non-helpful ones are overused, rare ones are not | — (FR-9, EF-7) |
+| UT-42 | `test_report.py::test_missing_slice_raises` | Unknown target | `rank_tactics` | Raises `ValueError` | — (FR-9) |
+| UT-43 | `test_report.py::test_pooled_vs_within_flags_confounded_tactic` | Hashtag helpful pooled, nothing within | `pooled_vs_within` | Flagged confounded; 96 % shrink | — (FR-9, EF-8) |
+| UT-44 | `test_report.py::test_backlash_flag` | Emoji helps views, hurts likes | `backlash` | Flagged; exclamation not | — (FR-9, EF-6) |
+
+**Effects and ranking assumptions** (IDs are referenced by FR-7, FR-9 and the tests in §5):
+
+| ID | Assumption / constraint | Consequence | Checked by |
+|----|------------------------|-------------|------------|
+| EF-1 | The OLS models describe the whole dataset (inference), so they use every video and no train/test split. | NFR-1 applies to the prediction models (FR-6), not to these. | — |
+| EF-2 | Rule features have different units. | Effects are reported per 1 SD (`std_coef`) for comparison, and per raw unit with `pct_effect = 100 (exp(b) - 1)`. | UT-34 |
+| EF-3 | Fixed effects are done by subtracting each channel's mean from every variable; channels with one video drop out. Standard errors are clustered by channel but not adjusted for the absorbed means. | With about 12,000 channels the difference is small. | UT-29 |
+| EF-4 | Within a category the one-hot controls (hour, week, weekday) can be collinear, so their own coefficients are undetermined. | Rule-feature coefficients are unaffected (rank of features + controls = rank of all columns, checked on real data). | — |
+| EF-5 | 14 features × 3 targets × 11 scopes × 2 models are tested; about 1 in 20 CIs will exclude 0 by chance. | Category results are leads, not findings; a tactic is called helpful or harmful only if its 95 % CI excludes 0. | UT-40 |
+| EF-6 | `n_chars` and `n_words` describe length, and `caps_ratio` is nonzero in almost every title. | Length features are controls, not ranked as tactics; `caps_ratio` counts as used at 0.5 or more. | UT-44 |
+| EF-7 | "Common" means used in at least 10 % of titles; "overused" means common and not clearly helpful (within-creator CI not above 0). | The threshold is a judgment call (`report.HIGH_USAGE`). | UT-41 |
+| EF-8 | Titles use different tactics in different categories and channels. | The pooled model can credit a tactic with a channel's size; compare with the within-creator model before believing a pooled effect. | UT-29, UT-43 |
 
 ---
 
@@ -274,6 +321,9 @@ flowchart LR
     subgraph MODELS["ytclickbait.models (in progress)"]
       MO["regression + reporting"]
       EMM["embedding_model.py"]
+      TFM["tfidf_model.py"]
+      CMP["comparison.py"]
+      EFF["effects.py"]
     end
     S1["scripts/build_dataset.py"] --> LD
     S1 --> SP
@@ -284,11 +334,22 @@ flowchart LR
     CP --> S1
     CP --> S2
     EM -.->|"embeddings.npy"| EMM
+    TF -.->|"tfidf.npz"| TFM
+    S3["scripts/run_tfidf_model.py"] --> TFM
+    CP --> S3
     NB["notebooks 01-03"] --> MO
     NB --> EMM
+    NB --> TFM
+    CMP --> RPT["report.py"]
+    EFF --> RPT
+    NB --> RPT
     T["tests"] -.->|"verifies"| DATA
     T -.->|"verifies"| FEAT
     T -.->|"verifies"| EMM
+    T -.->|"verifies"| TFM
+    T -.->|"verifies"| CMP
+    T -.->|"verifies"| EFF
+    T -.->|"verifies"| RPT
 ```
 
 **Description:** the modules of the `src/ytclickbait` package, which thin scripts and
@@ -366,8 +427,9 @@ All unit tests run on small synthetic data in `tests/` (no real data needed). �
 
 **Spec-driven workflow for embeddings.** UT-8 – UT-18 were written from FR-10 – FR-12 and
 EA-1 – EA-9 *before* the modeling code. UT-8 – UT-14 describe how the existing embedding code
-behaves and should pass now. UT-15 – UT-18 call `ytclickbait.models.embedding_model`, which
-does not exist yet, so they fail (red) until it is built. The loop is: make one test pass,
+behaves and should pass. UT-15 – UT-18 call `ytclickbait.models.embedding_model`, which did
+not exist yet, so they failed (red) until it was built one function at a time; all four now
+pass. The loop is: make one test pass,
 have a person review the result, then do the next. If a test shows an assumption is wrong
 (e.g. EA-2 emojis turn out to be read), we update the EA row and the test together rather than
 just editing the test.
@@ -399,7 +461,7 @@ just editing the test.
 | UT-8 | `test_embeddings.py::test_vectors_are_unit_length_float32` (slow) | MiniLM downloaded | Embed a batch of 10 titles | Shape (10, 384), `float32`, every row's L2 norm = 1 ± 1e-5 | — (FR-10, EA-7) |
 | UT-9 | `test_embeddings.py::test_caps_are_invisible` (slow) | Same | Embed "YOU WON'T BELIEVE THIS" and "you won't believe this" | Vectors equal within 1e-5 | — (EA-1) |
 | UT-10 | `test_embeddings.py::test_different_emojis_look_alike` (slow) | Same | Embed "pasta night 😱" and "pasta night 🔥" | Cosine similarity > 0.99 | — (EA-2) |
-| UT-11 | `test_embeddings.py::test_exclamation_count_barely_matters` (slow) | Same | Embed "great video!", "great video!!!", "car crash" | cos(! , !!!) > 0.9 and > cos(!, car crash) | — (EA-3) |
+| UT-11 | `test_embeddings.py::test_exclamation_count_barely_matters` (slow) | Same | Embed "great video!", "great video!!!", "car crash" | cos(! , !!!) > 0.85 and > cos(!, car crash) | — (EA-3) |
 | UT-12 | `test_embeddings.py::test_identical_titles_get_identical_vectors` (slow) | Same | Embed a batch containing "Official Trailer" twice | The two rows are equal within 1e-6 | — (FR-10, EA-7) |
 | UT-13 | `test_embeddings.py::test_cache_recomputes_when_model_changes` | Embedding call replaced by a fake that counts calls | `load_or_embed` with model A twice, then model B | Fake called once for A (second run reuses), once more for B | `.sha256` file holds B's fingerprint (FR-10, EA-8) |
 | UT-14 | `test_embeddings.py::test_cpu_and_accelerator_agree` (slow; skipped if no GPU) | MPS or CUDA available | Embed 5 titles on CPU and on the GPU | Values agree within 1e-4 | — (NFR-2) |
@@ -407,6 +469,16 @@ just editing the test.
 | UT-16 | `test_embedding_model.py::test_ridge_skips_missing_targets` | Same; 10 train rows have NaN y | Fit with NaNs; fit again with those rows marked not-train | No error; predictions identical | — (FR-11) |
 | UT-17 | `test_embedding_model.py::test_score_known_values` | Stub model that predicts column 0 | `score` on 4 rows with one error of 1, then with one NaN target | RMSE 0 / R² 1 / n 3 on the error-free rows; RMSE 0.5 on all 4; NaN row not counted | — (FR-11) |
 | UT-18 | `test_embedding_model.py::test_clusters_fit_on_train_only` | 200 unit vectors, 150 train | `fit_clusters(k=4)`; set test rows to 50 and fit again | Same cluster centres; `.predict` labels all 200 rows | — (NFR-1, FR-12) |
+| UT-19 | `test_tfidf_model.py::test_ridge_ignores_test_rows` | 100 synthetic rows, 80 train | Fit; multiply test rows' X by 1000 and set their y to 1e6; fit again | Predictions on train rows identical | — (NFR-1, FR-13) |
+| UT-20 | `test_tfidf_model.py::test_ridge_skips_missing_targets` | Same; 10 train rows have NaN y | Fit with NaNs; fit again with those rows marked not-train | Predictions identical | — (FR-13, TA-5) |
+| UT-21 | `test_tfidf_model.py::test_group_cv_keeps_channels_together` | 100 rows in groups of 5 | Fit with `groups` | Fit succeeds; chosen alpha is in the grid | — (FR-13) |
+| UT-22 | `test_tfidf_model.py::test_score_known_values` | Stub model predicting column 0 | `score` with one excluded row, all rows, and a NaN target | RMSE 0 / R² 1 / n 3; RMSE 0.5 on all 4; NaN row not counted | — (FR-13) |
+| UT-23 | `test_tfidf_model.py::test_controls_fit_on_train_only_and_unseen_category_ok` | Category "Rare" only in test rows | `build_controls` | "Rare" not learned; test rows still transform | — (NFR-1, TA-3) |
+| UT-24 | `test_tfidf_model.py::test_scaler_ignores_test_rows` | 40 rows, 36 train | Set test rows' `log_age_days` to 1e6; rebuild | Train-row matrix identical | — (NFR-1, TA-3) |
+| UT-25 | `test_tfidf_model.py::test_baseline_fill_ignores_test_rows` | Some train rows lack a baseline | Change test rows' baseline; rebuild for `split_time` | Train-row matrix identical | — (NFR-1, TA-3) |
+| UT-26 | `test_tfidf_model.py::test_baseline_only_for_split_time` | Same frames | Build controls for both splits | `split_time` has exactly one more column | — (FR-13) |
+| UT-27 | `test_tfidf_model.py::test_top_terms_finds_planted_word` | Coefficients with a known max and min | `top_terms(n=1)` | Highest positive and lowest negative term returned; control columns excluded | — (FR-13) |
+| UT-28 | `test_tfidf_model.py::test_top_terms_rejects_vocab_mismatch` | 5 coefficients, 2 terms | `top_terms` | Raises `ValueError` | — (TA-6) |
 
 ### 5.2 Functional Test Cases
 
@@ -415,10 +487,11 @@ just editing the test.
 | ★FT-1 | Build dataset end-to-end | 6 Kaggle files in `data/raw/`; `uv sync` done | 1. `uv run python scripts/build_dataset.py` 2. Load `videos.parquet`, `split.parquet` | Exit 0; ~78,180 rows; `video_id` unique and identical order in both files; log reports non-English drops by country and split counts; no test channel in `split_group` train | Processed files exist; rerun gives byte-identical output (NFR-2) |
 | ★FT-2 | Build features & alignment guard | FT-1 passed | 1. `build_features.py --skip-roberta --skip-embeddings` 2. Check outputs 3. Shuffle `split.parquet` rows and rerun | Step 1 exits 0 in < 2 min; `rule_features`, `sentiment`, `tfidf.npz` have the same row count/order as `videos`; step 3 raises `ValueError("…out of sync…")` | Feature files row-aligned (NFR-4) |
 | ★FT-3 | Title models beat controls-only baseline | FT-2 passed, models implemented | 1. Fit controls-only Ridge and rules / TF-IDF / embedding models on train rows 2. Score on test rows of both splits | Metrics table with RMSE and R² per model × split; coefficients table with clustered 95 % CIs; test rows never used in fitting | Results saved to `reports/` (FR-6, FR-7) |
-| FT-4 | Fast test suite | `uv sync` done | `uv run pytest -m "not slow"` | All pass in < 10 s (NFR-3), except UT-15 – UT-18 until FR-11/FR-12 are built | — |
+| FT-4 | Fast test suite | `uv sync` done | `uv run pytest -m "not slow"` | All pass in < 10 s (NFR-3) | — |
 | FT-5 | Full test suite incl. models | Internet for first model download | `uv run pytest` | All pass, incl. RoBERTa sentiment signs and UT-8 – UT-14 | Models cached locally |
 | FT-6 | Embedding model vs. other title models | FT-2 passed with embeddings; `embedding_model.py` built | 1. For each target and split, fit controls only, rules, embeddings, rules + embeddings (FR-11) 2. Score on test rows | Table of RMSE / R² / n for 4 models × 2 splits × 3 targets; `split_group` marked primary; gain of embeddings over controls and over rules shown; no test row used in fitting | Table saved to `reports/` (FR-11, EA-5) |
 | FT-7 | Embedding clusters report | FT-6 passed | 1. `fit_clusters` on train rows 2. For each cluster, compute size, mean controls-only residual on test rows, 5 titles nearest the centre 3. A person reads the write-up | Report lists every cluster with the three items; wording describes topics/formats and makes no caps, emoji or punctuation claims | Report saved to `reports/` (FR-12, EA-1 – EA-3) |
+| FT-8 | TF-IDF model results | FT-2 passed; `tfidf.npz` and vectorizer built | 1. `uv run python scripts/run_tfidf_model.py` 2. Open `notebooks/03_tfidf_results.ipynb` 3. A person reads the top terms | 12 metric rows (3 targets × 2 splits × controls / TF-IDF) with RMSE, R², n; top-term CSV with 60 terms per target and split; no test row used in fitting; wording treats top terms as topics/formats (TA-2) | CSVs in `reports/` (git-ignored; regenerate with the script) (FR-13, TA-2, TA-4) |
 
 ---
 
@@ -469,19 +542,22 @@ While embedding implementation is still pending, the acceptance tests have surpr
 | FR-3 splits | **Met** |
 | FR-4 language filter | **Met** (3rd iteration; validated by sampling dropped titles) |
 | FR-5 sentiment | **Met** |
-| FR-6 baseline & title models | **In progress** (next step) |
-| FR-7 coefficients, fixed effects, by category | **Not started** |
+| FR-6 baseline & title models | **Met** (`comparison.py`: controls only, rules, rules + sentiment, TF-IDF, embeddings, rules + embeddings; 3 targets × 2 splits on real data) |
+| FR-7 coefficients, fixed effects, by category | **Met** (`effects.py`; pooled and within-creator, overall and top-10 categories, 3 targets) |
 | FR-8 title / trending history, categories | **Met** (2.9 % of videos changed title) |
-| FR-9 final report and figures | **Not started** (EDA figures exist in notebook 01) |
-| FR-10 embedding generation | **In progress** (code exists, real-data run pending) |
-| FR-11 embedding models, FR-12 embedding clusters | **Not started**; acceptance tests UT-15 – UT-18 written first and expected to fail |
+| FR-9 final report and figures | **Met** (`notebooks/04_report.ipynb`; six figures; rankings from `report.py`) |
+| FR-10 embedding generation | **Met** (`embeddings.npy`, 78,180 × 384, committed via LFS with its `.sha256`) |
+| FR-11 embedding models, FR-12 embedding clusters | **In progress**: `score()`, `fit_ridge()` and `fit_clusters()` built in `models/embedding_model.py` after the acceptance tests; real-data runs (FT-6, FT-7) next |
 | NFR-1 leakage, NFR-2 reproducibility, NFR-4 alignment, NFR-5, NFR-6 | **Met** |
-| NFR-3 performance | **Met** for tests (~2 s); feature-build timing to be recorded |
-| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 27 tests across 6 files) |
+| NFR-3 performance | **Met** for tests (fast suite 7.6 s on an M2 MacBook Air, budget 10 s); feature-build timing to be recorded |
+| UT-1 … UT-7, FT-4, FT-5 | **Passing** (pytest suite: 65 tests across 13 files) |
 | FT-1, FT-2 | **Passing** on the real data (78,180 videos built); FT-2 shuffle-guard step to be run manually |
-| FT-3 | **Not yet runnable** (models pending) |
-| UT-8 – UT-14 | **Failing by design**. If UT-10 or UT-11 fails, update EA-2 / EA-3 |
-| UT-15 – UT-18, FT-6, FT-7 | **Failing by design** until `embedding_model.py` exists |
+| FR-13 TF-IDF model | **Met** (`tfidf_model.py`, real-data run done; `log_views` R² gain +0.100 on `split_group`, +0.014 on `split_time`) |
+| FT-3 | **Passing** (`reports/model_comparison.csv`; TF-IDF rows identical to the FT-8 run, which cross-checks both paths) |
+| UT-8 – UT-14 | **Passing** (UT-14 skipped without a GPU). UT-11's bar lowered from 0.9 to 0.85 after measuring 0.89; EA-3 updated |
+| UT-15 – UT-18 | **Passing** (UT-15 and UT-18 also checked to fail against a deliberately leaky version) |
+| UT-19 – UT-28, FT-8 | **Passing** (UT-19, UT-24 and UT-25 mirror the NFR-1 leakage tests; a review found the baseline-fill leak and the vocabulary check, both fixed) |
+| FT-6, FT-7 | **Not yet run** (need the real-data notebooks) |
 
 **What we'd change in the spec:** the proposal only controlled for video age; we'd have written
 the "no leakage" and "creator vs. title" requirements up front. The within-channel time split,

@@ -63,7 +63,8 @@ def detect_languages(
     return pd.DataFrame(
         {
             "detected_language": [d.name.lower() if d else "unknown" for d in detected],
-            "english_confidence": confidence,
+            # Remove floating-point noise between runs before persisting diagnostics.
+            "english_confidence": pd.Series(confidence, index=titles.index).round(6),
         },
         index=titles.index,
     )

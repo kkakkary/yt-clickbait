@@ -40,7 +40,10 @@ packages = ["src/ytclickbait"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["slow: downloads or runs transformer models (deselect with -m 'not slow')"]
+markers = [
+    "slow: downloads or runs transformer models",
+    "full_data: requires the complete raw Kaggle dataset",
+]
 
 [tool.ruff]
 line-length = 100
