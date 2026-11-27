@@ -140,7 +140,7 @@ Each requirement traces to the code that implements it and the test(s) that veri
 | FR-8 | The system shall record per video `n_distinct_titles`, `title_changed`, `first_title`, `last_title`, `countries`, `n_countries`, `days_trending`, and map `category_id` to `category_name` from the country JSON files. | M / S | `data/clean.py` | `test_title_history`, `test_categories_mapped` |
 | FR-9 | The system shall produce a report with figures ranking tactics by effect size (most effective) and by high usage with near-zero or negative effect (most overused), for views and engagement. | H / V | notebook 03, `reports/` (not started) | Review of `reports/figures/` |
 | FR-10 | The system shall produce one embedding per video from its `title` (the latest-snapshot title) with `all-MiniLM-L6-v2`: 384 `float32` values, L2 norm 1 ± 1e-5, rows in `videos.parquet` order, saved to `embeddings.npy`. Saved vectors shall be reused only when the titles, their order and the model name all match the run that produced them; otherwise they are recomputed. | H / S | `features/embeddings.py` | UT-8, UT-12, UT-13, `test_embedding_cache_rejects_changed_titles` |
-| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/embedding_model.py` (`fit_ridge`, `score` built; FT-6 run pending) | UT-15, UT-16, UT-17, FT-6 |
+| FR-11 | The system shall fit Ridge on [embeddings + controls] for each of the three targets, using only train rows with a non-missing target, and report RMSE, R² and row count on test rows for both splits. Each result shall be shown next to (a) controls only, (b) rules + controls and (c) rules + embeddings + controls, so the gain from embeddings is visible. **`split_group` is the primary comparison** for embeddings (see EA-5); the `split_time` gain is reported but labelled as possibly including creator recognition. | H / V | `models/comparison.py`, `scripts/run_comparison.py` (shared `fit_ridge` / `score`; FT-6 pending) | UT-15, UT-16, UT-17, FT-6 |
 | FR-12 | The system shall group titles with k-means on embeddings fitted on train rows only, and for each cluster report: size, mean `log_views` residual from the controls-only model on test rows, and the 5 titles closest to the centre. Results shall be described as title *topics/formats*, never as caps, emoji or punctuation effects (EA-1 – EA-3). | M / V | `scripts/run_embedding_clusters.py`, [cluster report](../reports/embedding_clusters.csv) | UT-18, FT-7 |
 | FR-13 | The system shall fit Ridge on [TF-IDF + controls] for each of the three targets, using only train rows with a non-missing target, choose alpha by cross-validation on those rows (folds grouped by `channel_id` for `split_group`), and report RMSE, R², alpha and row counts on test rows for both splits, next to a controls-only Ridge. Controls are `log_age_days`, `n_tags`, `log(1 + desc_len)`, `n_countries`, category, `publish_week`, `publish_hour_utc`, `publish_dow_utc`, plus the channel baseline for `split_time` only. It shall also save the 30 most positive and 30 most negative TF-IDF coefficients per target and split. | H / V | `models/tfidf_model.py`, `scripts/run_tfidf_model.py`, `notebooks/03_tfidf_results.ipynb` | UT-19 – UT-44, FT-8, FT-9 |
 
@@ -435,10 +435,14 @@ have a person review the result, then do the next. If a test shows an assumption
 just editing the test.
 
 **Interface the tests assume** (`src/ytclickbait/models/embedding_model.py`):
-- `fit_ridge(X, y, is_train, alphas=..., seed=42)` → fitted model with `.predict(X)`; uses only
-  rows where `is_train` is true and `y` is not missing.
+- `fit_ridge(X, y, is_train, groups=None, alphas=..., seed=42)` → fitted model with
+  `.predict(X)`; uses only rows where `is_train` is true and `y` is not missing. With `groups`
+  (channel ids) the alpha-search folds keep each channel in one fold.
 - `score(model, X, y, mask)` → `{"rmse", "r2", "n"}` on rows where `mask` is true and `y` is
   not missing.
+- `fit_ridge` and `score` are the shared versions from `models/tfidf_model.py`, re-exported by
+  `embedding_model.py`. An earlier separate copy was removed so that every Ridge model is fitted
+  the same way and UT-15 – UT-17 test the code the pipeline runs.
 - `fit_clusters(emb, is_train, k, seed=42)` → fitted k-means with `.cluster_centers_` and
   `.predict(emb)`, fitted on train rows only.
 
