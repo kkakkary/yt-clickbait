@@ -20,7 +20,8 @@ analysts studying engagement.
 | Rule-based features, VADER + RoBERTa sentiment, TF-IDF, embeddings | Done |
 | Real data downloaded and processed (78,180 videos) | Done |
 | EDA and feature notebooks | Done (run on real data) |
-| Models for log(views) and engagement, interpretation by category | Next, see [Next steps](#next-steps) |
+| TF-IDF Ridge model for views and engagement | Done: `scripts/run_tfidf_model.py`, `notebooks/03_tfidf_results.ipynb` |
+| Rules and embedding models, interpretation by category | Next, see [Next steps](#next-steps) |
 
 ## Data
 
@@ -91,7 +92,8 @@ src/ytclickbait/
   features/tfidf.py        TF-IDF, fit on train rows only
   features/embeddings.py   all-MiniLM-L6-v2 sentence embeddings
   resources/clickbait_words.txt   Editable clickbait phrase list
-  models/                  Next phase
+  models/tfidf_model.py    Ridge on TF-IDF + controls, scoring, top terms
+  models/                  Other models: next phase
 tests/                     pytest suite on small synthetic data (no real data needed)
 ```
 
