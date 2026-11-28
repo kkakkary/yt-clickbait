@@ -35,6 +35,8 @@ def main() -> None:
     controls, _ = build_controls(videos, split, split_name)
 
     with threadpool_limits(limits=1):
+        # k = 8: clusters are seed-stable only up to k = 9, and 8 is the first k that separates
+        # sports game highlights from sports talk. Evidence: scripts/run_k_sweep.py.
         kmeans = fit_clusters(embeddings, train, k=8, seed=cfg["seed"])
         labels = kmeans.predict(embeddings)
         baseline = fit_ridge(

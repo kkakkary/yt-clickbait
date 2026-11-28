@@ -75,7 +75,14 @@ Then the models and the report (about 4 minutes in total):
 uv run python scripts/run_comparison.py   # reports/model_comparison.csv
 uv run python scripts/run_effects.py      # reports/effects.csv, usage_rates.csv
 uv run python scripts/run_tfidf_model.py  # reports/tfidf_*.csv
+uv run python scripts/run_embedding_clusters.py  # reports/embedding_clusters.csv
 # then run notebooks/04_report.ipynb for the figures
+```
+
+Optional, about 15 minutes: the check behind the choice of 8 title clusters.
+
+```bash
+uv run python scripts/run_k_sweep.py      # reports/k_sweep.csv
 ```
 
 `build_features.py --skip-roberta --skip-embeddings` runs in seconds if you only need the
@@ -159,6 +166,14 @@ list because they mostly mark music videos, sports, and news. TF-IDF still sees 
 **Sentiment.** VADER is the main, interpretable score; it reacts to caps and `!`, which
 matters for clickbait. Twitter-trained RoBERTa (`cardiffnlp/twitter-roberta-base-sentiment-latest`)
 is a stronger comparison.
+
+**Eight title clusters.** k-means needs the number of clusters up front. A sweep over k = 4 to
+16 (`scripts/run_k_sweep.py`) found no elbow in inertia and a silhouette of about 0.03 for
+every k: title topics overlap, so neither picks a k. Stability does. Up to k = 9 a second
+seed gives nearly the same clusters (adjusted Rand index ≥ 0.96); from k = 10 it falls to
+0.55 – 0.87. Within that range, 8 is the first k that separates sports game highlights from
+sports talk. The cost: two clusters' held-out videos are 42 – 51% from three channels, which
+k = 7 avoids; the report states this.
 
 **No leakage.** TF-IDF vocabulary is fit only on rows that are train under both splits.
 Channel baselines use train rows only. Embedding caches are tied to a fingerprint of the
