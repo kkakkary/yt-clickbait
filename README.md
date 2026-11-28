@@ -83,6 +83,7 @@ Optional, about 15 minutes: the check behind the choice of 8 title clusters.
 
 ```bash
 uv run python scripts/run_k_sweep.py      # reports/k_sweep.csv
+uv run python scripts/time_embeddings.py  # reports/embedding_timing.csv (~6 min)
 ```
 
 `build_features.py --skip-roberta --skip-embeddings` runs in seconds if you only need the

@@ -1,6 +1,9 @@
 name: Tests and SPEC evidence
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   fast-tests:
@@ -9,7 +12,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --locked --python 3.12
-      - run: uv run python scripts/test_evidence.py
+      # Hugging Face models for the slow tests (MiniLM ~90 MB, RoBERTa ~500 MB), kept between runs
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-${{ hashFiles('configs/config.yaml') }}
+      # --full also runs the slow tests (UT-8 - UT-12, RoBERTa signs); UT-14 skips (no GPU)
+      - run: uv run python scripts/test_evidence.py --full
       - if: always()
         run: uv run ruff check .
       - if: always()
@@ -17,3 +26,18 @@ jobs:
         with:
           name: spec-test-evidence
           path: reports/test-evidence/
+
+  # Checks on the real processed data (types, ranges, missing values, joins; UT-45, UT-46).
+  # Pulls ~200 MB from git-lfs, so it runs on pushes to main and by hand only, not on every PR.
+  data-checks:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git lfs pull --include="data/processed/*.parquet,data/processed/embeddings.npy"
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked --python 3.12
+      - run: >-
+          uv run pytest -ra -m full_data
+          tests/test_processed_data.py
+          tests/test_embeddings.py::test_saved_embeddings_match_real_titles

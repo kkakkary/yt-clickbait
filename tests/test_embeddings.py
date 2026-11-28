@@ -96,3 +96,27 @@ def test_cpu_and_accelerator_agree():
     cpu = embed_titles(titles, device="cpu")
     gpu = embed_titles(titles, device=device)
     np.testing.assert_allclose(cpu, gpu, atol=1e-4)
+
+
+def real_files_present(*paths):
+    """False when a file is missing or is still a git-lfs pointer (a few hundred bytes)."""
+    return all(path.exists() and path.stat().st_size > 1024 for path in paths)
+
+
+@pytest.mark.full_data
+def test_saved_embeddings_match_real_titles():
+    """UT-45 (FR-10, NFR-4): row i of embeddings.npy is video i's title, from today's titles."""
+    from ytclickbait.config import load_config
+
+    cfg = load_config()
+    videos_path, embedding_path = cfg.file("videos"), cfg.file("embeddings")
+    if not real_files_present(videos_path, embedding_path):
+        pytest.skip("real data not here (run build_features.py or git lfs pull)")
+
+    titles = pd.read_parquet(videos_path, columns=["title"])["title"]
+    vecs = np.load(embedding_path, mmap_mode="r")
+    assert vecs.shape == (len(titles), 384)
+    assert vecs.dtype == np.float32
+    np.testing.assert_allclose(np.linalg.norm(vecs, axis=1), 1.0, atol=1e-5)
+    stamp = embedding_path.with_suffix(".sha256").read_text()
+    assert stamp == embeddings.titles_fingerprint(titles, cfg["embeddings"]["model"])

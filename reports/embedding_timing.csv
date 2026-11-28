@@ -1,0 +1,4 @@
+n_titles,embed_seconds,titles_per_second,kmeans_seconds,file_mb,machine,full_reload_seconds
+10000,24.326,411.080,2.778,15.360,"arm64 macOS-13.3.1, CPU",0.050
+40000,103.908,384.955,8.982,61.440,"arm64 macOS-13.3.1, CPU",0.050
+78180,195.135,400.647,15.619,120.084,"arm64 macOS-13.3.1, CPU",0.050

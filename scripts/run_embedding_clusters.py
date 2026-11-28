@@ -65,7 +65,8 @@ def main() -> None:
     report = cfg.root / "reports" / "embedding_clusters.csv"
     report.parent.mkdir(exist_ok=True)
     pd.DataFrame(rows).to_csv(report, index=False, float_format="%.8f")
-    print(f"Wrote {len(rows)} clusters to {report} (controls-only alpha={baseline.best_params_['alpha']})")
+    alpha = baseline.best_params_["alpha"]
+    print(f"Wrote {len(rows)} clusters to {report} (controls-only alpha={alpha})")
 
 
 if __name__ == "__main__":
